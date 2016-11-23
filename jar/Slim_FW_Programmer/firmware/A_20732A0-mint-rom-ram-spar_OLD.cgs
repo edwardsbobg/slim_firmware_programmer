@@ -1,0 +1,3004 @@
+# SPAR: start of file ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.cgs
+# SPAR: contents are: 
+# ../../Platforms/BCM920732TAG_Q32/BCM20732A0.cgs ../tier2/brcm/mint_v3/bld/mint_v3.cgs ../../Apps/RAM/mint_v3/xtal.cgs ../../Apps/RAM/mint_v3/eeprom.cgs ../../Apps/RAM/mint_v3/sleep.cgs ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf.text.cgs ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf.rodata.cgs ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf.data.cgs ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf.setup.cgs ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf.spar_setup_call.cgs 
+
+DEFINITION <ConfigDef20732_aa.hdf>
+################################################################################
+##
+## Start 20732A0 Platform configurtion
+##
+################################################################################
+
+################################################################################
+#  ADC configuration
+################################################################################
+ENTRY "Adc Driver Configuration"
+{
+    "RC Calibration for ADC" = 0xc
+    "Bandgap Temperature Constant" = 0
+    "Bandgap Output Current Trim" = 0x6
+    "Bandgap Noise Fiter Constant" = 0x3
+    "Dither Power Down" = 0
+
+    "IDAC Trimming 2nd OPAMP" = 0x6
+    "IDAC Trimming 1st OPAMP" = 0x6
+    "Comparator Reference Voltage" = "650mV"
+    "OPAMP Reference Voltage" = "500mV"
+    "OPAMP Power Down" = "Power ON"
+    "Sampling Clock Polarity" = "Positive Edge"
+    "Dither Clock Polarity"   = "Positive Edge"
+    "Comparator Bias Current Control" = "4.3uA"
+
+    "ADC Power Up Delay" = 20
+    "Calibration Reference Channel" = "ADC_INPUT_VDD_CORE"
+    "Calibration Reading Ave Count" = 8
+    "Input Range" = "0V-3.6V"
+
+    "Reference MicroVoltage"    = 1200
+    "ADCBandgapDelta[0]" = 0
+    "ADCBandgapDelta[1]" = 0
+    "ADCBandgapDelta[2]" = 0
+}
+
+################################################################################
+#  Low power configuration
+################################################################################
+ENTRY "Sleep Mode Configuration"
+{
+    "Sleep mode" = "HIDD" 
+    "Sleep enable" = 1
+}
+
+ENTRY "BLE App Hid-off config"
+{
+    "Hid-off allowed" = 0x17
+}
+
+################################################################################
+##
+## End 20732A0 Platform configurtion
+##
+################################################################################
+
+
+
+##$$DEFINE (DEBUG)
+
+
+ENTRY "Config Data Version"
+{
+}
+
+################################################################################
+#  I2C SPEED CONFIG
+################################################################################
+ENTRY "I2C Speed"
+{
+    "Speed" = "400 KHz"
+}
+
+ENTRY "PMU Crystal Warm up Time"
+{
+   "Crystal warm up time" = 2800	
+}
+
+
+# vvv $AUTOGEN(INCLUDE_FROM_TIER2{patch/init/config_items.agi})
+
+
+ENTRY "Init BB Registers"
+{
+        "Num entries" = 37
+        "Register address[0]" = 0x00390130
+        "Value[0]" = 0
+        "Register address[1]" = 0x00390000
+        "Value[1]" = 0
+
+
+######################################################################
+#                          TCA ENTRIES
+######################################################################
+# vvv $AUTOGEN(INCLUDE{tca_tbl.agi})
+
+
+
+###############################################################################
+# 20732A0 TCA Control
+###############################################################################
+# ^^^ $AUTOGEN(INCLUDE{tca_tbl.agi})
+
+    # vvv $AUTOGEN(INCLUDE_FROM_TIER2{patch/init/bt_bb_regs.agi})
+    
+    ## IMPORTANT -- Please Read: 
+    #  - The entries here are included as part of the "Init BB Registers" section
+    #    in the specific .ags file.  
+    #  - Maximum entries: 60
+    #  - Do NOT use config-specific $$IFDEFs in this file.  Instead, include
+    #    customer-specific entries directly in specific .ags files, and remove from here.
+    #    The only allowed $$IFDEFs are those concerning NO_CODE_PATCH flag
+    #  - Maintain indentation for better readability of final .cgs file
+    # 
+    # 
+    ## FORMAT/TEMPLATE
+    #   Here is the format/template of the register setting
+    #
+    #   <Register_name> <Reset_value> <romRst_value> <FwReset_value> <Register description> 
+    #   "Register address[0]" = <register_address> 
+    #              "Value[0]" = <register_setting_in_hex_format>
+    #
+    #   Because the address offset of some RF register is larger than 7e, they are not
+    #   accessible by bluerf_Write.  REG32 which uses direct accessing needs to be used for
+    #   register writing.  It is why some RF register writing is put here in this file as a
+    #   part of the BB register writing. Referring to the rf_bb_regs.agi for the writing
+    #   format definition.
+    #
+    #
+    ## NOTE
+    #   The DEBUG flag used below can be enabled via make commandline option "DEBUG=1"
+    #   DEBUG ONLY; MUST NOT BE ENABLED IN RELEASE: Disable wdog
+    #   "Register address[0]" = 0x00329008 # wdogcontrol_adr
+    #              "Value[0]" = 0
+    #
+    # #########################################
+    #
+    #   RF register setting
+    #
+    #  ########################################
+
+    # btrf_regc0 0x01f4 0x01f4 0x01f4 	  
+    "Register address[2]" = 0x600300
+               "Value[2]" = 0x0280
+
+    # btrf_regc1 0x0abc 0x0abc 0x0abc
+    "Register address[3]" = 0x600304
+               "Value[3]" = 0x0b48
+
+    # btrf_reg3 0x000f 0x000f 0x000f i_BT_J_LNA_ITRIM; i_BT_J_ITRIM_RX_MIXER... 
+    "Register address[4]" = 0x60000c
+               "Value[4]" = 0x06
+
+    # btrf_reg5f 0x001f 0x001f 0x001f i_BT_J_ITRIM_RX_GM[3:0]  
+    "Register address[5]" = 0x60017c
+               "Value[5]" = 0x10
+
+    # btrf_regd1 0x0060 0x0060 0x0030 VCO_SETTINGS  
+    "Register address[6]" = 0x600344  # Vbias set 0x30 = 550mV, default set 0x10 = 450mV
+               "Value[6]" = 0x30
+
+    # btrf_vcocal_base 0xe95b 0xe95b 0x0959 vcoCalBase[11:0]   
+    "Register address[7]" = 0x600194
+               "Value[7]" = 0x0959
+
+     # btrf_reg88 0x06a8 0x06a8 0x06a8
+    "Register address[8]" = 0x600220  # icp optimize for PM#11
+               "Value[8]" = 0x7a0
+
+    ##########################################
+    #
+    #   Modem register setting
+    #
+    # ########################################
+
+    # txCtrl1 0x01f3 0x01f3 0x01f3 Tx control register
+    #    new freqDevAdj for f2 = 250kH
+    "Register address[9]" = 0x31ff58   #delta f1 avg around 250kHz for BLE  set 0x1e7 for PM#11
+               "Value[9]" = 0x1e9
+
+    # txPreEmpFilt1_a1 0x0049 0x0049 0x0049 Tx Pre-emphasis filter1 coef a1
+    "Register address[10]" = 0x31ff78
+               "Value[10]" = 0x0049
+
+    # txPreEmpFilt1_b1 0x037f 0x037f 0x037f Tx Pre-emphasis filter1 coef b1
+    "Register address[11]" = 0x31ff80
+               "Value[11]" = 0x037f
+
+    # txPreEmpFilt1_b2 0x000b 0x000b 0x000b Tx Pre-emphasis filter1 coef b2
+    "Register address[12]" = 0x31ff84
+               "Value[12]" = 0x000b
+
+    # txPreEmpFilt2_a1 0x0388 0x0388 0x0388 Tx Pre-emphasis filter2 coef a1
+    "Register address[13]" = 0x31ff88
+               "Value[13]" = 0x0388
+
+    # txPreEmpFilt2_a2 0x0001 0x0001 0x0001 Tx Pre-emphasis filter2 coef a2
+    "Register address[14]" = 0x31ff8c
+               "Value[14]" = 0x0001
+
+    # txPreEmpFilt2_b1 0x0325 0x0325 0x0325 Tx Pre-emphasis filter2 coef b1
+    "Register address[15]" = 0x31ff90
+               "Value[15]" = 0x0325
+
+    # txPreEmpFilt2_b2 0x0065 0x0065 0x0065 Tx Pre-emphasis filter2 coef b2
+    "Register address[16]" = 0x31ff94
+               "Value[16]" = 0x0065
+
+    # vcoloPuCtrl 0xc808 0xc808 0xc808 RF vcolo power up control signal
+    "Register address[17]" = 0x31fcdc
+               "Value[17]" = 0xc809
+
+    # synthPuCtrl 0xc907 0xc907 0xc907 RF synthesizer power up control signal  
+    "Register address[18]" = 0x31fcd0
+               "Value[18]" = 0xc907
+
+    # kvcoCalPuCtrl 0xc907 0xc907 0xc907 Kvco calibration clock gating control s... 
+    "Register address[19]" = 0x31fcd4
+               "Value[19]" = 0xc907
+
+    # dsadcPuCtrl 0xc708 0xc708 0xc708 RF delta sigma ADC power up control sig... 
+    "Register address[20]" = 0x31fce0
+               "Value[20]" = 0xc708
+
+    # rxPuCtrl 0x4028 0x4028 0x4028 RF Rx power up control signal 
+    "Register address[21]" = 0x31fccc
+               "Value[21]" = 0x4028
+
+    # agcCtrl4 0x4529 0x4529 0x4529 Timer to start AGC
+    "Register address[22]" = 0x31fdf8
+               "Value[22]" = 0x4529
+
+    # txPuCtrl 0x8210 0x8210 0x8210 RF Tx power up control signal 
+    "Register address[23]" = 0x31fcc8
+               "Value[23]" = 0x8210
+
+    # paRampCtrl 0x8514 0x8514 0x8514 RF power amp ramping control signal
+    "Register address[24]" = 0x31fcd8
+               "Value[24]" = 0x8531
+
+    # pwrRampCtrl 0x8314 0x8314 0x8314 Powre Ramping Control
+    "Register address[25]" = 0x31fff8
+               "Value[25]" = 0x8114
+
+
+    # agcCtrl0 0x049b 0x049b 0x049b This register holds values used to cont... 
+    "Register address[26]" = 0x31fc2c  # adjust alpha, agcDecrLat for higher rssi readout ###default 0x49b
+               "Value[26]" = 0x399
+
+    # agcCtrl9 0x0025 0x0025 0x0025 Controls the AGC algorithm.  
+    "Register address[27]" = 0x31fee4 # adjust fixedGain  default 0x325  update 11/16/2011
+               "Value[27]" = 0x30
+
+    ##########################################
+    #
+    #   programable control register setting
+    #
+    # ########################################
+
+
+
+    ##########################################
+    #
+    #   Global variable (in ROM) over writing
+    #      This section is used to over write
+    #      some global variables which are
+    #      already in the ROM and related to
+    #      the RF settings.
+    #
+    # ########################################
+
+    # vcoloPuCtrlBLE_test (Reg_adr = 0x31fcdc)
+    "Register address[28]" = 0x002011cc      # ROM adr
+               "Value[28]" = 0x0000c809
+
+    # synthPuCtrlBLE_test (Reg_adr = 0x31fcd0)
+    "Register address[29]" = 0x002011d0      # ROM adr
+               "Value[29]" = 0x0000c907
+
+    # btrf_reg5fBLE       (Reg_adr = 0x60017c)
+    "Register address[30]" = 0x00201008      # ROM adr
+               "Value[30]" = 0x10
+
+    # paRampCtrlBLE       (Reg_adr = 0x31fcd8)
+    "Register address[31]" = 0x00200fbc      # ROM adr
+               "Value[31]" = 0x8531
+
+    # agcCtrl0BLE       (Reg_adr = 0x31fc2c)
+    "Register address[32]" = 0x00200ff8      # ROM adr
+               "Value[32]" = 0x399
+
+    # agcCtrl9BLE       (Reg_adr = 0x31fee4)
+    "Register address[33]" = 0x00201000      # ROM adr
+               "Value[33]" = 0x30
+
+    # btrf_reg03BLE     (Reg_adr = 0x60000c)
+    "Register address[34]" = 0x00201004      # ROM adr
+               "Value[34]" = 0x06
+
+    # btrf_reg5fBLE     (Reg_adr = 0x60017c)
+    "Register address[35]" = 0x00201008      # ROM adr
+               "Value[35]" = 0x10
+
+    # txCtrl1BLE       (Reg_adr = 0x31ff58)
+    "Register address[36]" = 0x00200fdc      # ROM adr
+               "Value[36]" = 0x1e9
+
+
+    ##########################################
+    #
+    #   Global variable (in RAM) over writing
+    #      The newly created global variables
+    #      used in the patch C code which are 
+    #      requested to be adjustable in the 
+    #      patch cgs file can be found in the
+    #      generated cgs file using key string
+    #      "Config_" to seach.
+    #
+    # ########################################
+
+    
+    # ^^^ $AUTOGEN(INCLUDE_FROM{patch/init/bt_bb_regs.agi})
+}
+
+
+
+# ^^^ $AUTOGEN(INCLUDE_FROM{configdata_common.agi})
+
+ENTRY "Temperature Correction Algorithm"
+{
+   "Enable" = 1
+}
+
+###############################################################################
+# 20732A0 TCA Table Values 
+###############################################################################
+ENTRY "TCA Conversion Values with Page Descriptors"
+{
+    "FAB ID"                = 0xFF
+
+    # Switching points
+    # Note: Numbers include a +50 offset
+
+    "Num TSteps"            = 4 
+
+    "Tmin[0]"               = 20  # -30 degree-C
+    "Tmin[1]"               = 30  # -20 degree-C
+    "Tmin[2]"               = 50  #   0 degree-C
+    "Tmin[3]"               = 90  #  40 degree-C
+   
+
+   # Number of 8-bit pages
+   # 1-5
+    "Num Pages8"            = 0
+
+    # Number of 16-bit pages
+    # 1
+    "Num Pages16"           = 1
+
+
+    #####################################
+    # PAGE DESCRIPTORS
+    #
+    # Legend:
+    # Single array index = [page]
+    # Dual array index = [page][reg]
+    #####################################
+
+    # 8-bit page descriptors (template)
+
+    # 16-bit page descriptor
+
+       # Page 0
+       "BaseAddress16[0]"      = 0x00310000
+           "NumRegs16[0]"      = 1
+
+       # 
+       "AdrOffset16[0][0]"     = 0xFF58
+         "Bitmask16[0][0]"     = 0x007F
+
+
+    #####################################
+    # PAGE DATA
+    # 
+    # Legend:
+    # Triple Array indices: [TStep][Page][Reg]
+    #####################################
+
+    #-----------
+    # 8-bit data
+    #-----------
+
+    # TStep 0
+       # Page 0
+       # Page 1
+       # Page 2
+       # Page 3
+       # Page 4
+     
+    # TStep 1
+       # Page 0
+       # Page 1
+       # Page 2
+       # Page 3
+       # Page 4
+     
+    # TStep 2
+       # Page 0
+       # Page 1
+       # Page 2
+       # Page 3
+       # Page 4
+     
+    # TStep 3
+       # Page 0
+       # Page 1
+       # Page 2
+       # Page 3
+       # Page 4
+    
+    # TStep 4
+       # Page 0
+       # Page 1
+       # Page 2
+       # Page 3
+       # Page 4
+    
+    # TStep 5
+       # Page 0
+       # Page 1
+       # Page 2
+       # Page 3
+       # Page 4
+
+    #------------
+    # 16-bit data
+    #------------
+
+    # TStep 0
+       # Page 0
+         "Data16[0][0][0]"     = 0x01e4
+       "Offset16[0][0][0]"     = 0x00
+
+
+       # The rest of Page 0 is spare
+
+       # Only 1 page supported for 16-bit data
+
+    # TStep 1
+       # Page 0
+         "Data16[1][0][0]"     = 0x01e7
+       "Offset16[1][0][0]"     = 0x00
+
+
+       # The rest of Page 0 is spare
+
+       # Only 1 page supported for 16-bit data
+
+    # TStep 2
+       # Page 0
+         "Data16[2][0][0]"     = 0x01e9 
+       "Offset16[2][0][0]"     = 0x00
+
+
+       # The rest of Page 0 is spare
+
+       # Only 1 page supported for 16-bit data
+
+    # TStep 3
+       # Page 0
+         "Data16[3][0][0]"     = 0x01ec
+       "Offset16[3][0][0]"     = 0x00
+
+       # The rest of Page 0 is spare
+
+       # Only 1 page supported for 16-bit data
+
+    # TStep 4
+       # Page 0
+
+       # The rest of Page 0 is spare
+
+       # Only 1 page supported for 16-bit data
+
+    # TStep 5
+       # Page 0
+
+       # The rest of Page 0 is spare
+
+       # Only 1 page supported for 16-bit data
+}
+
+
+
+
+######################################################################
+#                     R/RC CALIBRATION ENTRIES
+######################################################################
+# vvv $AUTOGEN(INCLUDE{rrccal_tbl.agi})
+
+
+
+
+
+# ^^^ $AUTOGEN(INCLUDE{rrccal_tbl.agi})
+ 
+
+
+
+
+
+# ^^^ $AUTOGEN(INCLUDE_FROM{patch/init/config_items.agi})
+
+##############################################################################
+# Need to include glue code autogenerated by gen_agi.pl before including code patches
+##############################################################################
+# vvv $AUTOGEN(INCLUDE{bld/agiauto.agi})
+# vvv $AUTOGEN(INCLUDE{sections.agi})
+                                    
+# TIER2: RO_AREA from tier2/brcm/generic/bld/A_20732A0/20732_ram_ext.elf       
+ENTRY "Data" = "RO_AREA from tier2/brcm/generic/bld/A_20732A0/20732_ram_ext.elf"   
+{                                   
+  "Address" = 0x00205918
+  "Data" =                          
+   COMMENTED_BYTES                  
+     {                              
+        <hex>                       
+            0f b4 00 f0 d7 fa 0f bc f8 68 2c f6 88 f8 2c f6
+			4c fd 00 00 00 b5 00 f0 09 fb 08 bc 18 47 00 00
+			00 f0 90 fc 4f f4 c0 01 2d f6 b0 fe 37 f6 a6 f8
+			20 46 00 f0 b7 fc 08 b1 37 f6 9c ba 37 f6 d9 ba
+			95 f8 30 00 00 f0 90 fc 37 f6 5a f8 00 f0 fc fe
+			1b f6 78 fe 10 b1 30 21 3a f6 9a f9 32 f6 71 bc
+			04 28 01 d8 fc f5 ef fb 40 08 fc f5 f0 fb 00 00
+			00 f0 9a ff 06 f6 38 bf 00 f0 ac ff 06 f6 9b bf
+			00 b5 0b f6 b6 fa 01 f0 b3 f9 00 bd 20 46 01 f0
+			bd f9 e0 79 32 46 07 f6 17 b8 bd e8 10 40 01 f0
+			c4 b9 00 00 50 43 4f f4 75 72 18 f6 a0 ff 00 00
+			20 46 2d e9 fe 01 01 f0 ed fc bd e8 fe 01 01 28
+			01 d0 19 f6 50 bb 19 f6 3f bb 1e b4 3b f6 bd fc
+			02 49 08 60 1e bc 19 f6 c5 b9 00 00 bc 88 20 00
+			a0 7b 3b f6 b2 fc 01 4c 20 60 70 bd bc 88 20 00
+			29 46 01 f0 4f fe 20 46 25 f6 9d fc 36 f6 e8 bc
+			20 78 07 28 06 d1 04 48 d0 f8 12 00 00 28 01 d1
+			15 f6 6b bd 15 f6 74 bd 9d 06 20 00 70 b5 01 f0
+			91 fe fe f5 47 bf 00 00 08 b5 08 98 09 f6 d1 fb
+			bd e8 08 40 01 46 10 22 28 1d 09 f6 e6 be 00 00
+			94 f8 8b 00 78 b9 b4 f8 8e 00 b4 f8 90 10 40 1a
+			81 b2 47 f6 ff 70 81 42 05 d2 11 b1 20 46 01 f0
+			4b ff 19 f6 00 b8 19 f6 01 b8 00 00 01 b5 01 f0
+			ad ff bd e8 01 40 03 f6 5e bc 00 00 02 f0 3c f9
+			15 f6 70 bc 4b f2 10 20 05 f6 9f fa 20 46 02 f0
+			8d fd 05 f6 0c fb 02 f0 72 fd 0c f6 2f fa 00 00
+			bd e8 f0 47 02 f0 c1 bd 10 b5 00 f0 bf f9 00 f0
+			e4 fc 19 49 00 20 06 f6 5c f8 18 48 d0 f8 12 00
+			00 28 02 d0 bd e8 10 40 00 47 10 bd 10 b5 14 49
+			00 20 08 70 14 49 13 48 08 60 01 f0 97 ff 00 f0
+			66 fe af f2 3b 01 00 20 05 f6 a9 fe 10 49 0f 48
+			08 60 10 49 2c 30 08 60 00 f1 2c 01 0e 48 01 60
+			06 21 01 71 09 48 0d 49 70 30 08 60 10 bd 0c 48
+			0c 49 00 68 08 1a 70 47 61 75 20 00 9d 06 20 00
+			58 0a 20 00 c9 76 20 00 40 0a 20 00 0c 87 20 00
+			a0 14 20 00 00 0c 20 00 ec 06 20 00 44 07 20 00
+			f8 0e 20 00 00 ef 20 00 2d e9 f0 41 00 26 a0 f8
+			8c 60 80 f8 9b 60 90 f8 1f 11 04 46 49 1c 80 f8
+			1f 11 c0 7b 37 46 10 b9 20 46 3b f6 a7 fa 53 48
+			05 68 a8 07 32 d5 52 48 05 f0 04 01 00 68 00 f0
+			40 00 08 43 14 d0 a0 7b 13 f6 3b fb 4d 49 40 08
+			08 60 94 f8 81 00 01 28 0a d1 02 20 84 f8 81 00
+			20 6d 40 89 00 01 a4 f8 a2 00 20 46 18 f6 2f fd
+			94 f8 1f 01 01 28 11 d1 22 f6 91 fe 42 49 89 78
+			41 b9 94 f8 24 11 05 29 04 d1 00 b9 7f 20 84 f8
+			26 01 03 e0 01 46 20 46 2f f6 be fc c5 f3 41 00
+			03 28 1c d1 20 46 31 f6 3f f8 94 f8 0b 01 01 28
+			05 d8 36 49 00 eb 40 00 0a 5c 52 1c 0a 54 e0 7b
+			29 46 00 28 20 46 02 d1 19 f6 3c f8 01 e0 18 f6
+			f4 ff 20 46 30 f6 e3 fc 84 f8 8a 70 18 e0 84 f8
+			1e 71 a8 07 0b d5 2a 49 94 f8 8a 00 09 78 88 42
+			05 d2 e1 7b 19 b1 40 1c 84 f8 8a 00 08 e0 94 f8
+			98 00 08 b1 84 f8 98 70 20 46 18 f6 b4 fe 01 26
+			20 48 00 78 c0 07 0d d0 00 2e 0b d0 60 8c 0c 28
+			08 d8 94 f8 25 00 00 28 04 d1 20 46 bd e8 f0 41
+			01 f0 52 bf bd e8 f0 81 10 b5 04 46 0f 48 00 68
+			80 07 19 d5 e0 7b 01 28 16 d1 94 f8 09 01 00 28
+			12 d1 a0 7b 13 f6 b5 fa 40 08 20 f0 01 01 a0 69
+			88 42 04 d0 13 f6 46 fa 40 00 c4 f8 84 00 20 46
+			bd e8 10 40 fd f5 22 bd 10 bd 00 00 5c 93 31 00
+			84 14 20 00 bc 88 20 00 92 14 20 00 14 0c 20 00
+			f8 0b 20 00 0c 89 20 00 70 b5 66 4c a0 76 e0 76
+			22 f6 88 fe 64 4d 29 68 60 f3 0f 21 61 82 94 f9
+			1b 00 22 f6 7f fe 29 68 60 f3 0f 21 a1 82 70 bd
+			10 b5 5c 4c 60 76 22 f6 75 fe 5b 49 09 68 60 f3
+			0f 21 21 82 10 bd 00 21 01 28 06 d0 02 28 00 d1
+			02 21 56 48 01 70 15 f6 c8 be 01 21 f9 e7 54 49
+			08 60 42 f2 1f 00 05 f6 ad bd 51 49 09 68 00 29
+			00 d0 08 47 70 47 08 b5 27 28 01 d9 00 20 08 bd
+			42 f2 1d 01 ad f8 00 10 01 21 8d f8 02 10 8d f8
+			03 00 68 46 05 f6 78 fd 01 20 08 bd 1c b5 27 28
+			01 d8 25 29 01 d9 00 20 1c bd 42 f2 1e 03 ad f8
+			00 30 03 23 8d f8 02 30 8d f8 03 00 8d f8 04 10
+			8d f8 05 20 68 46 05 f6 5f fd 01 20 1c bd 3e b5
+			a0 f6 62 14 59 2c 01 d3 00 20 3e bd 4f f6 14 44
+			ad f8 00 40 0d 24 8d f8 02 40 a0 f5 16 60 00 24
+			8d f8 04 00 8d f8 05 40 8d f8 06 40 8d f8 08 20
+			8d f8 03 40 8d f8 07 10 8d f8 09 30 68 46 05 f6
+			3b fd 01 20 3e bd 0e b5 4f f6 14 40 ad f8 00 00
+			0d 20 8d f8 02 00 01 20 8d f8 03 00 00 20 8d f8
+			08 00 01 90 8d f8 09 00 68 46 05 f6 25 fd 01 20
+			0e bd 1c 49 1c 4b 09 68 01 20 0a 68 9a 42 04 d1
+			49 68 1a 4a 91 42 00 d1 00 20 70 47 15 48 16 49
+			00 68 01 60 15 49 41 60 70 47 0e b5 4f f6 2f 41
+			ad f8 00 10 0e 21 8d f8 02 10 02 21 8d f8 06 00
+			8d f8 03 10 68 46 05 f6 ff fc 0e bd 03 46 0c 48
+			42 6a 18 68 81 1a c1 f1 00 00 00 d4 08 46 1a 60
+			70 47 00 00 68 47 20 00 34 83 31 00 00 59 20 00
+			a4 88 20 00 ec 0b 20 00 be ba ad de fe ca dd ba
+			00 a0 32 00 13 f6 4a bc 70 b5 05 46 00 24 05 e0
+			17 f6 60 f9 64 20 13 f6 41 fc 64 1c ac 42 f7 db
+			70 bd 00 00 04 48 00 78 00 28 03 d1 03 48 04 49
+			00 68 08 60 70 47 00 00 a1 58 20 00 f8 87 20 00
+			50 0f 20 00 10 b5 4f f4 58 12 02 23 0a e0 c2 f8
+			84 30 d2 f8 84 40 a4 07 04 d5 40 1e 11 f8 01 4b
+			c0 b2 d4 61 00 28 f2 d1 10 bd 10 b5 04 46 0a 48
+			00 78 01 28 04 d1 20 46 bd e8 10 40 13 f6 23 bf
+			02 28 07 d1 20 46 39 f6 fa fd 21 46 bd e8 10 40
+			c0 b2 d7 e7 10 bd 00 00 9c 06 20 00 05 21 81 81
+			80 69 90 f8 26 00 01 28 0f d1 81 1e 4f f4 46 10
+			c0 f8 90 1a 00 21 c0 f8 94 1a 41 69 41 f0 80 01
+			41 61 c1 69 41 f0 00 71 c1 61 70 47 10 b5 01 29
+			7e d1 7e 49 4f f4 46 13 4f f4 c0 02 01 28 78 d1
+			7b 48 80 68 00 28 75 d0 7a 4c 24 68 c1 f8 64 4c
+			79 4c 24 68 c1 f8 d8 4c 00 7c 1a 28 20 d1 77 48
+			01 f6 c8 41 00 68 48 60 75 48 00 68 48 61 75 48
+			00 68 88 60 74 48 04 68 8c 61 44 68 0c 60 84 68
+			0c 61 c4 68 c1 f8 30 43 04 69 cc 60 44 69 c1 f8
+			2c 43 84 69 d4 60 c4 69 c2 f8 7c 41 00 6a 25 e0
+			6a 48 01 f6 c8 41 00 68 48 60 69 48 00 68 48 61
+			68 48 00 68 88 60 68 48 00 68 88 61 67 48 00 68
+			08 60 0c 61 66 48 00 68 c1 f8 30 03 65 48 00 68
+			c8 60 65 48 00 68 c1 f8 2c 03 64 48 00 68 d0 60
+			63 48 00 68 c2 f8 7c 01 62 48 00 68 c1 f8 90 02
+			61 48 a1 f6 c8 41 00 68 c1 f8 f8 0d 5f 48 00 68
+			c3 f8 38 0a 5e 48 00 68 c1 f8 e8 0c 5d 48 00 68
+			c1 f8 e0 0f 5c 48 00 68 c1 f8 30 0c 5b 48 00 68
+			c1 f8 2c 0c 5a 48 00 68 c1 f8 dc 0e 59 48 02 e0
+			76 e0 17 e0 78 e0 00 68 c1 f8 e4 0e 56 48 00 68
+			c2 f8 f8 02 55 48 00 68 c2 f8 14 02 54 48 00 68
+			c2 f8 18 02 53 48 00 68 d0 66 53 48 00 68 c2 f8
+			f4 03 5f e0 51 48 01 f6 64 41 00 68 08 60 50 48
+			00 68 48 67 4f 48 00 68 c8 67 4f 48 00 68 88 66
+			4e 48 00 68 48 66 4e 48 00 68 88 67 4d 48 00 68
+			c8 66 4d 48 00 68 c1 f8 94 01 4c 48 00 68 c3 f8
+			38 0a 4b 48 00 68 08 67 4a 48 00 68 c1 f8 84 00
+			49 48 00 68 c1 f8 90 03 48 48 00 68 c1 f8 7c 03
+			47 48 00 68 c1 f8 94 03 46 48 00 68 41 f8 34 0c
+			45 48 00 68 41 f8 38 0c 44 48 00 68 c1 f8 78 02
+			43 48 00 68 c1 f8 80 02 42 48 00 68 d0 60 42 48
+			00 68 c2 f8 7c 01 41 48 00 68 c2 f8 f8 02 40 48
+			00 68 c2 f8 14 02 3f 48 00 68 c2 f8 18 02 3e 48
+			00 68 d0 66 3d 48 00 68 c2 f8 04 03 3c 48 9d e7
+			02 29 01 d1 01 20 10 bd 00 20 10 bd 00 f0 31 00
+			6c 15 20 00 b8 0f 20 00 bc 0f 20 00 c8 11 20 00
+			cc 11 20 00 d0 11 20 00 2c 88 20 00 c8 0f 20 00
+			cc 0f 20 00 d0 0f 20 00 c0 0f 20 00 c4 0f 20 00
+			f0 0f 20 00 e0 0f 20 00 e8 0f 20 00 04 10 20 00
+			08 10 20 00 dc 0f 20 00 d4 0f 20 00 d8 0f 20 00
+			e4 0f 20 00 ec 0f 20 00 f4 0f 20 00 f8 0f 20 00
+			fc 0f 20 00 00 10 20 00 0c 10 20 00 10 10 20 00
+			14 10 20 00 18 10 20 00 20 10 20 00 24 10 20 00
+			30 10 20 00 34 10 20 00 38 10 20 00 3c 10 20 00
+			40 10 20 00 44 10 20 00 4c 10 20 00 74 10 20 00
+			50 10 20 00 54 10 20 00 58 10 20 00 5c 10 20 00
+			60 10 20 00 64 10 20 00 68 10 20 00 6c 10 20 00
+			70 10 20 00 78 10 20 00 7c 10 20 00 80 10 20 00
+			84 10 20 00 88 10 20 00 8c 10 20 00 90 10 20 00
+			94 10 20 00 10 b5 09 22 06 49 00 20 01 eb c0 03
+			51 f8 30 40 5b 68 23 60 40 1c 80 b2 90 42 f5 d3
+			10 bd 00 00 50 88 20 00 70 b5 1c 49 09 68 c1 f3
+			c0 11 81 42 12 d1 4f f4 5c 15 d5 f8 88 48 2d f6
+			58 ff 42 79 d0 f8 02 10 62 f3 1f 61 8c 42 05 d1
+			d5 f8 84 18 00 88 09 0c 81 42 01 d0 00 20 70 bd
+			01 20 70 bd 10 b5 04 46 90 f8 56 00 90 b1 94 f8
+			55 00 01 28 10 d1 94 f8 2e 00 01 28 0c d1 94 f8
+			57 00 48 b9 94 f8 30 00 ff f7 ce ff 20 b9 20 46
+			0e f6 2d fa 00 20 10 bd 01 20 10 bd 48 93 31 00
+			10 b5 40 1c 06 f6 af fc 02 20 07 f6 3e fa 00 20
+			10 bd 10 b5 05 a0 06 f6 6d fd 07 f6 25 fa 07 48
+			01 68 09 b1 00 20 88 47 00 20 10 bd 50 61 69 72
+			69 6e 67 20 66 61 69 6c 65 64 00 00 1c 07 20 00
+			fb 48 00 78 70 47 fa 48 41 68 c9 07 03 d0 00 78
+			08 b1 01 20 70 47 00 20 70 47 f5 48 41 68 41 f0
+			01 01 41 60 70 47 f2 48 41 68 21 f0 01 01 41 60
+			70 47 f0 49 09 78 88 42 06 da 00 eb 40 01 c1 eb
+			40 10 ed 49 08 44 70 47 00 20 70 47 10 b5 03 46
+			08 46 ff f7 ee ff 06 22 bd e8 10 40 19 46 16 30
+			39 f6 e4 bb 2d e9 f0 41 05 00 e1 48 88 46 07 78
+			4f f0 00 06 06 d0 d8 f8 04 00 c0 f3 81 30 01 28
+			00 d1 01 26 00 24 14 e0 20 46 ff f7 d2 ff 1e b1
+			06 22 41 46 16 30 05 e0 01 7f a9 42 08 d1 06 22
+			41 46 10 30 39 f6 7c fb 10 b9 20 46 bd e8 f0 81
+			64 1c bc 42 e8 db 4f f0 ff 30 f7 e7 f0 b5 07 46
+			cb 48 89 b0 05 78 0e 46 38 46 ff f7 cb ff 41 1c
+			3b d1 5f b3 70 68 c0 f3 81 30 01 28 26 d1 25 b3
+			05 a8 0a 46 0b 46 0c 46 1e c0 f0 78 71 68 00 24
+			40 ea 01 20 20 f0 7f 40 05 90 30 68 20 f0 7f 47
+			11 e0 20 46 ff f7 95 ff 01 aa 05 a9 30 f6 0a fd
+			01 98 20 f0 7f 40 b8 42 04 d1 21 46 30 46 ff f7
+			95 ff 11 e0 64 1c ac 42 eb db 13 e0 00 24 0f e0
+			20 46 ff f7 7e ff 01 7f b9 42 08 d1 06 22 31 46
+			10 30 39 f6 2d fb 10 b9 20 46 09 b0 f0 bd 64 1c
+			ac 42 ed db 4f f0 ff 30 f7 e7 2d e9 f0 47 06 f6
+			c7 f9 a3 4e 5f ea 00 08 3e d0 00 20 45 46 30 70
+			04 46 df f8 80 92 30 e0 e8 79 02 06 2b d4 88 42
+			29 da c0 1c c0 b2 9d 4a 78 21 0a f6 1e fd 78 28
+			21 d1 30 78 98 4f 00 eb 40 01 c1 eb 40 10 97 49
+			38 44 10 22 14 31 39 f6 41 fb 30 78 06 22 00 eb
+			40 01 c1 eb 40 10 38 44 10 30 90 49 39 f6 36 fb
+			8e 48 04 eb 44 01 c1 eb 44 11 00 7a 39 44 08 77
+			30 78 40 1c 30 70 08 35 64 1c 99 f8 00 10 8c 42
+			ca db 40 46 17 f6 5a fd 00 20 31 78 00 e0 40 1c
+			88 42 fc db bd e8 f0 87 70 b5 0e 46 7c 49 03 46
+			09 78 00 20 15 46 8b 42 0c da 18 46 ff f7 11 ff
+			04 46 00 f1 10 01 06 22 30 46 39 f6 07 fb 20 7f
+			28 60 01 20 70 bd 70 b5 05 f6 b3 fc 05 46 05 f6
+			ad fc 04 46 7d b1 60 79 01 21 b1 eb 90 1f 0a d1
+			21 46 28 46 ff f7 3a ff 41 1c 04 d0 ff f7 f1 fe
+			05 7f 00 f1 10 04 29 46 20 46 00 f0 a3 fb 10 b1
+			05 f6 b4 fc 04 e0 05 f6 b7 fc 65 49 ff 20 08 70
+			64 4c 06 22 e1 1c 88 1d 39 f6 d8 fa 06 22 e1 1c
+			04 f1 0f 00 39 f6 d2 fa bd e8 70 40 05 f6 b3 bc
+			2d e9 f0 47 5c 4a 04 46 d2 f8 5c 03 86 b0 01 25
+			4f f0 00 08 94 f8 2b 30 58 49 01 2b 01 d1 0b 78
+			00 e0 4b 78 c0 f3 41 01 a3 74 03 29 7d d1 d2 f8
+			48 63 df f8 4c 91 06 f0 0f 07 00 07 08 d5 d9 f8
+			00 00 80 7b 20 b1 30 46 31 f6 70 f8 05 46 80 46
+			05 2f 5a d1 94 f8 2b 00 01 28 01 d0 00 28 54 d1
+			94 f8 2c 10 c6 f3 c0 10 4f f4 5c 1a 81 42 0c d1
+			da f8 84 18 04 91 da f8 88 08 05 90 06 22 0d f1
+			12 01 04 f1 44 00 39 f6 43 fa d9 f8 00 00 80 7b
+			80 07 00 d5 05 bb ff f7 6e fe f0 b1 da f8 80 18
+			04 91 da f8 84 08 04 a9 80 b2 05 90 c6 f3 80 10
+			ff f7 bc fe 41 1c 28 d0 d9 f8 00 10 89 7b 89 07
+			0c d5 01 aa 02 a9 ff f7 4f ff f0 b1 02 a9 01 98
+			30 f6 61 f8 ff 28 18 d0 00 e0 b5 b1 20 46 31 f6
+			8e f8 b8 f1 00 0f 02 d0 20 46 0e f6 48 f8 20 46
+			30 f6 fe fe 94 f8 2b 00 01 28 e0 6c 81 b2 01 d1
+			01 20 00 e0 03 20 2e f6 8d fe 1e 48 00 68 00 06
+			0b d5 05 2f 01 d0 03 2f 07 d1 b0 b2 06 b0 bd e8
+			f0 47 01 22 18 49 2f f6 13 b9 06 b0 1a e7 10 b5
+			05 f6 b8 fb 00 28 05 db 05 f6 f2 fd 4f f0 ff 30
+			05 f6 a7 fb 11 48 00 68 c0 07 01 d0 ff f7 23 ff
+			0f 48 40 68 00 28 1d d0 bd e8 10 40 00 47 00 00
+			a8 88 20 00 0c 07 20 00 24 89 20 00 f0 19 20 00
+			b1 88 20 00 90 1a 20 00 00 90 31 00 9c 14 20 00
+			dc 14 20 00 e8 50 20 00 80 08 37 00 e8 06 20 00
+			2c 18 20 00 10 bd 00 00 70 b5 11 4d 00 24 00 22
+			11 46 28 46 1a f6 24 ff 28 46 1a f6 17 ff 64 1c
+			20 35 07 2c f3 d3 0b 4d 00 24 04 eb 44 00 00 eb
+			c4 00 05 eb 80 00 90 f8 28 10 02 29 03 d1 00 6a
+			08 b1 2b f6 20 fa 64 1c 02 2c ee d3 70 bd 00 00
+			b4 36 20 00 c4 37 20 00 32 48 00 68 00 f0 04 00
+			70 47 30 48 01 68 21 f0 04 01 01 60 70 47 2d 48
+			01 68 41 f0 04 01 01 60 70 47 10 b5 05 f6 a2 fb
+			98 b1 07 f6 50 f8 28 49 30 b1 28 4a 48 7a 12 78
+			00 f0 1f 00 90 42 08 d3 25 48 40 79 40 07 02 d5
+			48 7a 00 06 07 d5 00 20 10 bd ff f7 d5 ff 20 b1
+			05 f6 88 fb 08 b9 05 20 10 bd 0c 20 10 bd 70 b5
+			05 46 0c 46 10 46 08 f6 be fc 00 2c 23 db a9 07
+			06 d5 81 07 02 d5 c0 06 1d d5 0c e0 02 20 70 bd
+			15 f0 2c 0f 1b d0 25 40 05 40 69 07 06 d5 40 06
+			11 d5 60 06 0f d4 bd e8 70 40 be e7 29 07 08 d5
+			40 06 08 d5 60 06 06 d4 05 f6 5c fb 18 b9 05 20
+			70 bd a8 06 01 d5 00 20 70 bd 03 20 70 bd 0e 20
+			70 bd 00 00 18 07 20 00 f0 19 20 00 b0 88 20 00
+			90 1a 20 00 10 b5 fd 4a 00 24 50 68 01 46 01 e0
+			40 10 64 1c c3 07 fb d1 f9 48 00 78 84 42 00 db
+			00 24 01 20 a0 40 01 43 51 60 f4 4a 28 21 01 20
+			0a f6 25 fb 20 46 10 bd 2d e9 f0 41 06 46 0f 46
+			4f f0 ff 35 05 f6 ac ff 04 00 08 d0 3a 46 31 46
+			20 46 06 f6 9b f8 05 46 20 46 17 f6 77 fb 28 46
+			bd e8 f0 81 2d e9 f0 47 e6 48 04 78 60 1c 61 d0
+			e0 1c e5 4a 78 21 c0 b2 0a f6 01 fb 05 f6 90 ff
+			07 00 57 d0 07 eb c4 06 06 22 df 49 30 46 39 f6
+			25 f9 dd 48 df f8 68 93 00 7a b0 71 f4 71 99 f8
+			00 00 3a 46 c0 06 01 0e 02 20 0a f6 e8 fa b0 79
+			00 28 3c d1 80 46 3c 46 45 46 4f f0 01 0a 1b e0
+			f0 79 a8 42 16 d0 06 22 21 46 30 46 39 f6 c0 f8
+			80 b9 a0 79 b1 79 88 42 0c d1 e0 79 4f f0 01 08
+			20 f0 80 01 0a fa 01 f0 05 f6 9a fe e0 79 40 f0
+			80 00 e0 71 08 34 6d 1c 99 f8 00 00 85 42 df db
+			b8 f1 00 0f 13 d0 bd 4a 28 21 01 20 0a f6 b7 fa
+			99 f8 00 00 4c 46 c0 06 01 0e 3a 46 02 20 0a f6
+			ae fa 20 78 39 46 c2 00 b8 a0 04 f6 77 fe 38 46
+			17 f6 0c fb 00 20 bd e8 f0 87 2d e9 f0 43 0c 46
+			be 49 9f b0 09 68 20 b9 22 78 05 2a 01 d1 49 69
+			3c e1 bb 4d bb 4e 2b 78 4f f0 01 09 42 f2 17 02
+			06 f1 49 08 06 f1 59 07 0e 2b 75 d2 df e8 03 f0
+			07 2a 6e 32 3e bc 5b 66 75 86 9f ac bf fd 28 b9
+			22 78 20 46 01 2a 67 d1 49 68 33 e1 05 28 10 d1
+			05 f6 6f fa 40 b1 05 f6 58 ff 1f b0 bd e8 f0 43
+			00 22 11 46 06 f6 e5 b9 1f b0 bd e8 f0 43 06 f6
+			22 bb 04 28 50 d1 86 f8 69 90 1f b0 bd e8 f0 43
+			05 f6 6d ba 02 28 47 d0 22 78 20 46 03 2a 43 d1
+			c9 68 0f e1 02 28 3f d1 b4 f8 03 00 a0 f5 00 51
+			18 39 39 d1 04 20 28 70 00 20 17 e0 b0 78 06 26
+			01 28 04 d1 10 21 38 46 39 f6 be f8 0c e0 02 28
+			01 d0 05 28 70 d1 10 21 38 46 39 f6 b5 f8 10 22
+			8d 49 38 46 39 f6 62 f8 2e 70 20 46 1f b0 bd e8
+			f0 43 06 f6 bf ba 02 28 5e d1 07 20 28 70 a1 1d
+			38 46 1f b0 bd e8 f0 43 06 f6 93 ba 02 21 29 70
+			a0 1d 1f b0 bd e8 f0 43 06 f6 7b ba 22 78 20 46
+			04 2a 49 d1 09 69 cd e0 46 e0 20 78 21 46 0e 28
+			42 d1 b1 f8 03 00 90 42 3e d1 09 20 28 70 38 46
+			1f b0 bd e8 f0 43 89 1d 06 f6 42 ba 21 78 20 46
+			0e 29 31 d1 b0 f8 03 10 91 42 2d d1 6d 49 10 22
+			29 31 80 1d 38 f6 dc ff 18 b9 06 f6 c9 f9 0a 20
+			21 e0 1f b0 bd e8 f0 43 04 20 06 f6 84 b9 10 21
+			40 46 39 f6 61 f8 b2 7c a1 1d 40 46 39 f6 0e f8
+			06 f6 68 f9 0b 20 0e e0 05 28 0d d1 20 78 3e 28
+			0a d1 a0 78 05 28 07 d1 04 f1 0d 02 61 1d 40 46
+			06 f6 47 f9 0c 20 28 70 1f b0 bd e8 f0 83 04 28
+			fa d1 05 f6 91 f9 b4 f8 03 10 54 4f 88 42 67 d1
+			60 79 00 28 64 d0 86 f8 69 90 0d 20 02 24 28 70
+			05 f6 c5 f9 3c 48 b1 7c 41 72 b1 78 01 29 03 d9
+			41 7a 41 f0 80 01 41 72 30 78 48 bb 30 7d c0 07
+			0b d0 05 f6 8a fe 06 f6 05 f9 05 f6 92 fe 05 46
+			05 f6 8d fe 29 46 06 f6 ec f8 30 7d 80 07 08 d5
+			05 f6 89 fe 06 f6 d5 f8 00 f0 4b fe 00 21 06 f6
+			bf f8 30 7d 40 07 05 d5 00 e0 39 e0 05 f6 84 fe
+			06 f6 a5 f8 f0 7a c0 07 02 d0 03 24 05 f6 7e f9
+			06 f6 72 f8 32 4d 28 68 81 68 00 20 88 47 1d 49
+			08 70 28 68 41 69 00 20 88 47 18 4a 28 21 01 20
+			0a f6 6d f9 f0 7c 00 28 9e d1 06 f6 95 fd 78 22
+			15 49 01 a8 38 f6 92 ff 05 f6 7b fd 78 22 01 a9
+			11 48 38 f6 8b ff 39 68 00 29 8d d0 20 46 11 e0
+			39 68 09 b1 00 20 88 47 06 f6 46 f8 0e 20 82 e7
+			00 28 81 d1 22 78 20 46 93 1f 04 2b 3f f6 7c af
+			51 f8 22 10 1f b0 bd e8 f0 43 08 47 68 1a 20 00
+			0c 07 20 00 b1 88 20 00 f0 19 20 00 0d 64 65 6c
+			65 74 65 20 64 75 70 6c 69 63 61 74 65 64 20 61
+			6e 64 20 77 72 69 74 65 20 62 6f 6e 64 65 64 20
+			69 6e 66 6f 20 69 64 78 00 00 00 00 30 07 20 00
+			14 07 20 00 90 1a 20 00 20 07 20 00 1c 07 20 00
+			10 07 20 00 70 b5 63 4a 00 25 12 68 52 68 90 47
+			04 46 40 1c 0a d0 e0 1c 5f 4a 78 21 c0 b2 0a f6
+			04 f9 78 28 02 d1 5d 48 01 25 04 70 28 46 70 bd
+			10 b5 4f f0 ff 30 05 f6 cb fc 59 4a 28 21 01 20
+			0a f6 f5 f8 55 49 00 20 48 70 10 bd 10 b5 c1 79
+			01 20 88 40 05 f6 bc fc 51 4a 28 21 01 20 0a f6
+			e6 f8 4e 49 ff 20 08 70 10 bd 10 b5 4c 4a 28 21
+			01 20 0a f6 da f8 28 28 06 d0 28 21 48 48 38 f6
+			53 ff 05 f6 c4 fc 05 e0 45 48 40 68 12 f6 cd fc
+			42 49 48 70 ff f7 91 fb 41 48 bd e8 10 40 08 30
+			05 f6 bc bd 70 b5 06 46 00 f0 00 fe 08 b1 05 20
+			11 e0 06 22 71 1c 3b 48 38 f6 e8 fe 39 4c 06 22
+			09 3c e1 1c 04 f1 0f 00 38 f6 e0 fe 20 7b c1 1f
+			0a 29 03 d3 06 20 06 f6 46 f8 58 e0 a1 7c 88 42
+			00 d2 a0 74 60 7b e1 7c 00 25 08 40 e0 74 a0 7b
+			21 7d 08 40 20 75 84 f8 6d 50 30 46 06 f6 8a fb
+			a0 78 01 28 1e d1 00 f0 e5 fd d8 b1 e0 7b 02 21
+			88 b1 01 28 0f d0 03 22 02 28 05 d1 60 7a 02 28
+			0b d1 04 20 a0 70 09 e0 03 28 04 d0 04 28 05 d1
+			60 7a 02 28 01 d1 a1 70 00 e0 a2 70 60 7c 40 f0
+			04 00 60 74 06 f6 96 fb 17 49 01 20 08 70 84 f8
+			25 50 06 f6 b9 fa 15 a0 05 f6 dc ff e0 7a c0 07
+			13 d0 18 a0 05 f6 d6 ff 05 f6 5b f8 38 b1 05 f6
+			1f ff 04 46 05 f6 19 ff 21 46 05 f6 9a fd 05 f6
+			fe fd 07 48 08 30 05 f6 49 fd 06 f6 3d fc 01 20
+			70 bd 00 00 10 07 20 00 f0 19 20 00 b1 88 20 00
+			68 1a 20 00 99 1a 20 00 14 07 20 00 0d 67 65 74
+			20 70 61 69 72 69 6e 67 20 72 65 71 75 65 73 74
+			00 00 00 00 42 6f 6e 64 20 52 65 71 75 65 73 74
+			00 00 00 00 ff 48 40 68 70 47 fe 49 48 60 70 47
+			fc 49 48 68 40 1c 48 60 70 47 fa 49 48 68 40 1e
+			48 60 70 47 2d e9 f0 41 f7 4f 38 78 00 28 2f d0
+			f6 4e 00 20 30 70 1f 21 f5 48 38 f6 e1 fe f4 4d
+			00 24 df f8 d0 83 18 e0 07 20 05 f8 01 0b 04 eb
+			44 00 c0 eb 44 11 41 44 08 7f 08 b9 17 20 00 e0
+			18 20 05 f8 01 0b 10 31 06 22 28 46 38 f6 26 fe
+			30 78 ad 1d 08 30 30 70 64 1c 38 78 84 42 01 da
+			04 2c e1 db 31 78 bd e8 f0 41 e1 48 04 f6 06 bf
+			bd e8 f0 81 7c b5 e0 48 0d 46 00 68 80 06 1f d5
+			de 4c 08 20 e0 61 4f f0 81 00 20 62 14 f6 bd fd
+			14 f6 c5 fd 03 46 2a 46 69 46 01 a8 14 f6 95 fd
+			9d f8 00 00 60 60 9d f8 04 00 20 60 a4 f5 90 64
+			00 e0 60 68 12 f6 0d ff 01 28 fa d0 12 f6 49 fd
+			7c bd cf 4b 01 22 1a 60 00 29 01 46 02 d0 cd a0
+			12 f6 0b bf 00 20 cd e7 10 b5 cf 4c 20 68 38 b3
+			01 68 00 29 2e d0 01 79 40 79 01 f0 0f 02 21 f0
+			0f 01 42 ea 41 01 00 f0 0f 02 20 f0 0f 00 42 ea
+			40 00 00 23 c9 b2 c0 b2 1a 46 02 f6 56 fa c3 48
+			00 78 01 28 20 68 00 68 01 d1 01 21 00 e0 00 21
+			ff f7 cf ff 0a f6 45 f8 bd e8 10 40 0a f6 83 b8
+			00 23 1a 46 40 21 41 20 02 f6 3f fa bd e8 10 40
+			17 f6 5a b8 10 bd 2d e9 f0 47 b5 48 00 24 04 60
+			b4 48 df f8 90 92 c0 79 c9 f8 04 00 17 f6 4a f8
+			18 b9 04 f6 c6 f9 02 28 7d d2 af 48 d0 f8 12 00
+			00 28 78 d0 ad 48 01 78 c9 07 02 d0 40 78 0a f6
+			43 ff ab 48 01 78 c9 07 05 d0 b0 f8 05 20 01 79
+			c0 78 0a f6 29 ff 01 20 04 f6 4c fc 4f f4 58 10
+			c0 68 a4 4a 00 f0 07 00 04 28 0a d8 10 68 9b 4b
+			20 f0 04 00 10 60 19 78 20 46 02 29 00 d0 08 46
+			18 70 10 68 40 07 02 d5 00 20 14 f6 33 fe 9a 48
+			01 88 a1 f5 7f 42 ff 3a 01 d0 98 49 08 60 98 48
+			01 68 49 1c 01 d0 8c 49 08 60 ff f7 75 ff 95 49
+			91 f9 00 00 40 1c 01 d0 93 48 01 60 04 f6 1e f9
+			92 49 93 4f 08 68 93 4e df f8 4c 82 93 4d b0 b1
+			88 88 a0 b1 89 46 16 f6 7e ff c8 f8 00 00 18 b3
+			d9 f8 00 30 01 46 4c 46 b9 f8 04 20 18 46 0b f6
+			33 fb d8 f8 00 00 30 60 a0 88 28 80 16 e0 30 68
+			90 b1 d9 f8 00 10 88 42 10 d2 28 88 16 f6 63 ff
+			44 46 c8 f8 00 00 48 b1 2a 88 31 68 38 f6 1e fd
+			20 68 30 60 02 e0 0f e0 37 60 2c 80 08 f6 2a f8
+			04 f6 6c fb 03 f6 e1 ff 06 f6 99 f9 07 f6 eb fb
+			bd e8 f0 47 04 f6 bb bb bd e8 f0 87 2d e9 f0 47
+			05 46 00 78 01 26 0f 28 10 d0 13 28 11 d1 00 21
+			50 48 07 e0 05 eb 81 02 b2 f8 05 20 43 68 49 1c
+			1a 44 42 60 aa 78 8a 42 f4 dc 45 e0 a8 78 00 28
+			42 d0 67 4c 00 20 20 70 66 48 05 f6 01 f8 18 b1
+			01 21 21 70 16 f6 40 ff 28 46 04 f6 65 fa 28 78
+			df f8 84 91 3e 28 0b d1 a9 78 99 f8 04 30 28 46
+			4a 46 99 42 04 d2 12 68 52 f8 21 10 01 b1 88 47
+			5a 48 00 27 df f8 68 81 04 68 0b e0 e0 07 07 d0
+			58 f8 27 10 21 b1 28 46 88 47 08 b1 01 26 03 e0
+			7f 1c 64 10 00 2c f1 d1 28 78 05 28 0e d0 08 28
+			14 d0 0e 28 08 d1 b5 f8 03 00 a0 f5 00 51 1f 39
+			02 d1 e8 88 fe f7 a1 fd 30 46 9d e7 d9 f8 00 00
+			01 68 09 b1 28 46 88 47 01 26 f5 e7 45 48 01 68
+			00 29 f1 d0 28 46 88 47 ee e7 2d e9 f0 41 07 46
+			88 46 02 f1 08 00 16 46 01 21 80 b2 16 f6 14 ff
+			04 00 17 d0 25 1d 32 46 41 46 28 1d 38 f6 86 fc
+			6f 80 2e 80 04 f6 20 fe 40 f4 00 50 20 80 36 1d
+			66 80 20 46 16 f6 11 ff ff f7 27 fe bd e8 f0 41
+			04 f6 cf bd 5c e6 30 b5 2f 4d 9f b0 e9 7c 01 f0
+			07 04 95 f8 6d 10 01 43 c8 b2 85 f8 6d 10 34 ea
+			00 00 03 d0 29 48 00 68 c0 07 71 d0 28 48 00 68
+			41 69 4f e0 b4 88 20 00 a8 88 20 00 43 08 20 00
+			a8 1b 20 00 24 89 20 00 dc 0a 20 00 80 04 36 00
+			b8 00 32 00 42 4c 45 41 50 50 20 43 46 41 20 64
+			65 62 75 67 0a 0d 00 00 58 08 20 00 9c 06 20 00
+			d8 0b 20 00 ae 14 20 00 9d 06 20 00 cf 06 20 00
+			c0 06 20 00 ac 88 20 00 8c 07 20 00 54 08 20 00
+			f5 07 20 00 fb 07 20 00 5c 08 20 00 b3 06 20 00
+			14 2d 04 00 50 08 20 00 bc 06 20 00 44 08 20 00
+			d8 06 20 00 cc 18 20 00 ec 06 20 00 e8 06 20 00
+			fc 06 20 00 e0 06 20 00 90 1a 20 00 18 07 20 00
+			10 07 20 00 00 20 88 47 95 f8 6d 00 84 43 17 d1
+			06 f6 02 fa 78 22 11 49 01 a8 38 f6 ff fb 05 f6
+			e8 f9 78 22 01 a9 0d 48 38 f6 f8 fb 0c 48 01 68
+			00 29 05 d0 1f b0 bd e8 30 40 03 20 08 47 ff e7
+			1f b0 30 bd 10 b5 40 1c 05 f6 6e fc 00 20 05 f6
+			94 fc 04 20 06 f6 f1 f9 00 20 10 bd f0 19 20 00
+			1c 07 20 00 10 b5 04 46 80 7b 11 f6 32 ff 28 49
+			40 08 09 68 11 f6 c6 fe b4 f8 a2 10 19 b1 81 42
+			01 d8 01 20 10 bd 00 20 10 bd 70 b5 04 46 90 f8
+			81 00 28 bb 03 20 e0 74 01 25 84 f8 25 50 94 f8
+			9a 00 60 b1 20 6d c0 8b 00 01 a4 f8 a2 00 a0 7b
+			11 f6 0f ff 16 49 40 08 08 60 84 f8 8b 50 60 8c
+			a1 69 18 b1 b1 fb f0 f2 00 fb 12 10 21 8c 81 42
+			06 d0 20 84 21 6d a1 f8 b4 00 21 6d a1 f8 b0 00
+			d4 f8 04 11 a0 69 11 f6 8d fe 21 6d b1 f8 b2 10
+			b0 fb f1 f1 20 46 17 f6 af f8 a0 69 c4 f8 04 01
+			20 46 2f f6 dd fd 00 20 84 f8 09 01 70 bd 00 00
+			bc 88 20 00 10 b5 24 4b 19 7d c1 f3 00 02 82 42
+			1a d0 60 f3 00 01 21 48 19 75 01 78 41 f0 04 01
+			01 70 32 f6 a5 fc 1e 49 88 42 06 d1 39 f6 d6 fc
+			18 b9 bd e8 10 40 26 f6 3d bd 00 22 bd e8 10 40
+			04 21 18 48 18 f6 ca ba 10 bd 10 b5 12 48 13 4a
+			00 7d c3 07 10 78 40 f0 04 01 4f ea 80 73 02 d0
+			00 2b 0a db 01 e0 00 2b 07 da 40 07 05 d4 11 70
+			00 22 04 21 0b 48 18 f6 b1 fa 0b 48 00 68 00 68
+			80 47 00 28 06 d0 09 48 09 49 00 78 0a 78 90 42
+			00 d0 08 70 10 bd 00 00 00 1d 20 00 d9 14 20 00
+			f4 23 20 00 98 24 20 00 b8 0e 20 00 cc 14 20 00
+			cd 14 20 00 70 b5 0b 4c 0b 4d 39 b9 36 f6 fe fb
+			94 f8 26 00 00 28 0b d1 08 48 06 e0 05 29 07 d1
+			94 f8 26 00 00 28 03 d1 05 48 00 68 c5 f8 d8 0c
+			70 bd 00 00 40 53 20 00 00 f0 31 00 34 88 20 00
+			bc 0f 20 00 23 48 81 79 41 f0 02 01 81 71 70 47
+			21 49 08 60 04 f6 26 bb 70 b5 1f 4d 00 24 02 78
+			29 68 23 46 59 b1 0e 2a 32 d1 b0 f8 03 20 a2 f5
+			00 56 18 3e 2c d1 80 1d 2b 60 88 47 28 e0 17 49
+			91 f8 28 50 a5 b1 0e 2a 0a d1 b0 f8 03 20 cd 8c
+			aa 42 1d d1 01 24 81 f8 28 30 05 f6 07 ff 17 e0
+			08 2a 01 d0 30 2a 13 d1 81 f8 28 30 01 24 03 e0
+			08 2a 01 d0 30 2a 02 d1 01 46 04 20 06 e0 3e 2a
+			06 d1 81 78 05 29 03 d1 01 46 05 20 ff f7 f5 f9
+			20 46 70 bd 34 19 20 00 ec 88 20 00 90 1a 20 00
+			10 b5 2c f6 c5 fc 04 46 90 f8 bd 00 f8 b9 20 8e
+			00 07 94 f8 a8 00 06 d4 03 28 0e d0 12 28 0c d0
+			05 28 14 d1 09 e0 0f 28 07 d0 02 28 05 d0 04 28
+			03 d0 13 28 01 d0 06 28 09 d1 3d 22 11 46 20 46
+			30 f6 82 ff 00 20 84 f8 a8 00 01 20 10 bd 00 20
+			10 bd 70 b5 04 46 80 79 18 4a 00 eb 40 01 02 eb
+			c1 01 17 4a 4f f0 00 05 12 68 12 05 06 d5 49 7d
+			21 b1 04 29 02 d0 06 29 00 d0 01 25 ff f7 c0 ff
+			00 b9 25 b1 20 68 bd e8 70 40 2a f6 b4 ba a0 79
+			2c f6 7e fc 80 8d 00 21 60 f3 0b 01 e0 79 60 f3
+			0d 31 a0 88 60 f3 1f 41 20 68 01 60 a1 88 20 68
+			bd e8 70 40 09 1d 00 22 19 f6 24 be 10 50 20 00
+			e8 50 20 00 90 f8 32 20 52 07 07 d5 02 8e 12 07
+			01 d5 34 f6 4b bd 00 22 34 f6 35 bd 70 47 00 00
+			2d e9 f0 41 0f 46 b0 f8 01 10 06 46 c1 f3 09 00
+			01 f4 7c 41 0a 0a 1d 49 01 25 09 7d 1c 4c 4f f0
+			00 08 fc 2a 12 d1 14 28 1c d0 2b 28 03 d0 3a 28
+			28 d1 f8 78 24 e0 c8 07 03 d0 00 20 ff f7 aa fe
+			25 70 39 46 30 46 28 f6 7a ff 1b e0 10 4b 00 26
+			1b 78 20 2a 0d d1 1d 28 04 d0 1e 28 02 d0 1f 28
+			10 d1 0a e0 c8 07 0d d0 00 20 ff f7 93 fe 25 70
+			08 e0 0c 2a 06 d1 03 28 04 d1 1b b1 26 70 01 20
+			ff f7 88 fe 40 46 bd e8 f0 81 00 00 00 1d 20 00
+			f0 88 20 00 01 48 c0 7b 03 f6 bc b8 58 06 20 00
+			08 49 08 70 70 47 07 48 00 78 70 47 10 b5 04 46
+			04 20 04 f6 8d fb 03 49 60 79 08 70 04 f6 25 f9
+			01 20 10 bd f1 88 20 00 00 b5 00 21 89 b0 05 a8
+			0a 46 0b 46 8c 46 80 e8 0e 10 01 21 16 f6 00 fe
+			05 98 c0 f3 15 00 40 f4 80 00 05 90 05 f6 9b f8
+			01 aa 05 a9 2f f6 4e fb 03 22 01 a9 45 48 38 f6
+			3d fa 44 48 03 22 05 a9 c0 1c 38 f6 c7 f9 06 22
+			40 49 41 48 38 f6 32 fa 3e 49 01 20 09 1f 08 70
+			08 1d 09 b0 00 bd 3d 48 00 68 00 07 01 d5 01 20
+			70 47 00 20 70 47 1c b5 38 4c 20 68 00 07 11 d4
+			04 f6 3d fb 01 46 06 22 68 46 38 f6 a7 f9 04 f6
+			36 fb 06 22 2f 49 38 f6 a1 f9 06 22 69 46 2d 48
+			38 f6 0c fa 2e 49 01 20 48 77 20 68 40 f0 08 00
+			20 60 1c bd 1c b5 29 4c 20 68 00 07 11 d5 04 f6
+			1e fb 01 46 06 22 68 46 38 f6 88 f9 04 f6 17 fb
+			06 22 20 49 38 f6 82 f9 06 22 69 46 1d 48 38 f6
+			ed f9 1f 49 00 20 48 77 20 68 20 f0 08 00 20 60
+			1c bd 10 b5 ff f7 b7 ff 08 b1 16 48 10 bd bd e8
+			10 40 04 f6 fc ba fe b5 0f 46 94 46 1c 46 08 a9
+			0e c9 06 46 ff f7 a7 ff 00 b1 01 24 12 4d 11 48
+			28 60 00 20 28 71 02 20 68 71 8d e8 0e 00 63 46
+			22 46 31 46 38 46 04 f6 24 f8 01 24 05 e0 28 68
+			50 f8 34 10 00 20 88 47 64 1c 68 79 a0 42 f6 dc
+			fe bd 00 00 f8 88 20 00 74 14 20 00 ac 88 20 00
+			34 19 20 00 30 16 04 00 f4 06 20 00 10 b5 04 f6
+			d3 fa 2c f6 68 fb 28 b1 90 f8 be 00 bd e8 10 40
+			2f f6 aa bc 7f 20 10 bd 10 b5 02 6d 83 69 b2 f8
+			b2 40 01 fb 14 33 83 61 b0 f8 90 30 a0 f8 8e 30
+			52 7c 01 eb 81 04 c2 f3 04 02 4a 43 90 f8 7b 30
+			04 eb 41 11 89 1a 19 44 25 31 25 22 b1 fb f2 f3
+			02 fb 13 11 80 f8 7b 10 10 bd 10 b5 04 46 90 f8
+			50 00 00 28 11 d1 94 f8 2b 00 01 28 20 46 08 d1
+			f9 f5 de fb e0 6c bd e8 10 40 81 b2 01 20 2d f6
+			39 bd bd e8 10 40 2f f6 a9 bd 10 bd 08 48 00 68
+			00 f0 08 00 70 47 06 48 01 68 21 f0 08 01 01 60
+			70 47 03 48 01 68 41 f0 08 01 01 60 70 47 00 00
+			18 07 20 00 08 48 00 68 00 f0 10 00 70 47 06 48
+			01 68 21 f0 10 01 01 60 70 47 03 48 01 68 41 f0
+			10 01 01 60 70 47 00 00 18 07 20 00 10 b5 12 48
+			01 68 09 b1 00 20 88 47 00 20 10 bd 10 b5 4f f4
+			58 14 d4 f8 ac 00 40 07 14 d5 d4 f8 88 00 40 07
+			10 d5 00 21 af f2 2b 00 0a f6 76 f9 54 f8 ac 0f
+			20 f0 04 00 20 60 04 48 40 68 00 28 02 d0 bd e8
+			10 40 00 47 10 bd 00 00 00 89 20 00 10 b5 17 48
+			17 49 42 68 8a 42 00 d0 41 60 16 48 00 21 16 4b
+			01 70 a0 22 1a 80 40 88 14 4a 00 f5 c8 70 10 80
+			13 4a 00 f5 57 70 10 80 12 4a b0 20 10 70 12 48
+			12 4a 41 60 c0 e9 02 12 01 61 11 49 41 61 13 f6
+			30 fe 10 48 00 78 40 07 02 d5 0f 49 01 20 08 70
+			0e 48 01 68 41 f0 82 01 01 60 10 bd ec 15 20 00
+			f7 7b 20 00 08 89 20 00 18 04 20 00 ac 0a 20 00
+			b4 0a 20 00 a7 0a 20 00 b8 89 20 00 df 7e 20 00
+			2d 7e 20 00 0c 89 20 00 a0 0a 20 00 98 00 32 00
+			70 b5 05 46 06 20 28 75 28 68 41 68 31 b1 28 46
+			88 47 28 7d 06 28 01 d0 0d 28 26 d1 e8 7c 01 28
+			01 d0 02 28 04 d1 28 46 bd e8 70 40 fa f5 b5 b8
+			05 f1 18 04 60 7b 00 26 20 b1 66 73 28 46 fa f5
+			64 f8 08 e0 61 89 20 68 08 44 20 f0 78 40 20 60
+			28 46 fa f5 65 f8 fc 4c 21 78 c9 07 06 d0 a1 78
+			21 b1 28 46 f9 f5 8e fe a6 70 70 bd 01 46 28 46
+			bd e8 70 40 f9 f5 e4 be 70 b5 04 46 c0 7c f3 4d
+			03 28 35 d1 20 7d 0d 28 32 d1 04 f1 18 00 41 7b
+			49 bb 29 69 a1 42 08 d1 a9 68 31 b9 20 46 f9 f5
+			78 f9 20 46 fa f5 a9 f8 22 e0 01 68 40 89 08 44
+			40 01 06 09 a0 7b 11 f6 54 fb 86 42 01 d3 30 1a
+			02 e0 80 1b c0 f1 80 50 22 7c 4f f0 00 61 19 2a
+			0a d1 24 28 01 d9 88 42 06 d9 20 46 f9 f5 59 f9
+			20 46 ff f7 8d ff 03 e0 05 28 d7 d9 88 42 d5 d8
+			20 7d 01 21 d6 4a 02 28 00 d1 21 b9 03 28 01 d0
+			04 28 09 d1 41 b1 92 f8 30 00 00 28 16 d0 20 46
+			bd e8 70 40 f9 f5 0d bc d0 68 10 b1 20 46 0c f6
+			b6 fd 95 f8 3f 00 01 28 04 d0 00 28 06 d1 28 68
+			a0 42 03 d1 bd e8 70 40 fa f5 f0 bd 70 bd 70 b5
+			c4 48 01 24 00 78 08 b3 c3 48 01 68 81 42 1e d1
+			c2 48 01 68 81 42 1a d1 c1 48 01 68 81 42 16 d1
+			c0 48 01 68 81 42 12 d1 bf 49 08 68 88 42 0d d0
+			00 1f 00 f1 18 05 80 7b 11 f6 f3 fa 41 08 28 68
+			11 f6 88 fa b9 49 80 1e 88 42 00 d2 03 24 20 46
+			70 bd 10 b5 4f f4 48 14 20 69 00 f0 0f 00 02 28
+			02 d0 02 20 11 f6 04 ff b1 48 00 78 20 64 b1 48
+			00 78 60 64 f8 f5 02 fd 0a 21 b0 fb f1 f0 00 eb
+			80 10 41 00 e0 68 64 22 40 1c 50 43 b1 fb f0 f0
+			c4 f8 9c 00 a8 49 40 1c 08 60 60 62 a7 48 01 68
+			41 f0 80 01 01 60 4f f4 64 10 01 6c 21 f0 03 01
+			01 64 10 bd 10 b5 a2 48 4f f4 c0 01 00 78 04 28
+			01 d0 05 28 05 d1 51 f8 e0 0f 40 f0 80 00 08 60
+			0a e0 51 f8 e0 0f 20 f0 80 00 08 60 4f f4 64 10
+			01 6c 21 f0 03 01 01 64 13 f6 79 f8 95 4a 00 20
+			10 62 50 62 94 48 90 4b 01 88 4f f4 64 70 01 fb
+			00 f1 92 48 00 68 b1 fb f0 f1 19 60 51 60 90 49
+			b1 fb f0 f0 d0 67 10 bd 70 b5 8e 49 0c 68 8e 49
+			0d 68 8e 49 09 78 00 29 27 d1 14 f0 0e 0f 4f f4
+			48 12 11 d1 8a 49 09 68 0c b1 cb 03 0c d5 0d b1
+			c9 03 09 d5 01 68 87 48 7f 4b 00 88 1b 88 18 44
+			00 f2 71 20 81 42 07 d8 10 69 00 f0 0f 00 02 28
+			07 d0 ff f7 76 ff 04 e0 10 69 00 07 01 d0 ff f7
+			a1 ff 7d 48 04 60 7d 48 05 60 70 bd 4f f4 48 11
+			0a 68 02 f0 0f 02 42 f0 70 02 0a 60 5e 4a 00 21
+			91 70 c1 7b 51 b1 76 49 49 7c 02 29 06 d1 b0 f8
+			9c 10 c9 06 02 d5 01 22 80 f8 9b 20 17 f6 c8 ba
+			2d e9 fc 41 04 46 00 7d 01 21 00 25 52 4a 03 28
+			01 d0 04 28 09 d1 41 b1 4f f4 48 10 03 68 03 f0
+			0f 03 43 f0 10 03 03 60 95 70 20 7d 0b 46 06 28
+			07 d1 33 b1 94 f8 25 00 18 b9 60 8c 0c 28 00 d8
+			91 70 20 46 17 f6 ca f9 5e 4f 38 78 00 28 14 d0
+			20 68 00 21 82 6a 20 46 90 47 06 46 3d 70 02 20
+			a4 f8 a2 00 69 46 40 f2 e2 40 11 f6 c5 fa a0 7b
+			6b 46 02 46 31 46 11 f6 72 fa bd e8 fc 81 36 49
+			08 61 70 47 70 b5 34 4d 28 69 00 b1 80 47 4e 49
+			e8 68 09 68 00 24 88 42 05 d3 01 20 68 70 12 f6
+			6f fe ec 60 02 e0 00 f1 01 00 e8 60 28 78 4f f4
+			48 11 80 07 0c d5 01 f1 94 01 48 68 6a 68 40 ea
+			02 00 48 60 08 68 aa 68 40 ea 02 00 41 f8 94 09
+			88 6a 00 07 2e d4 0a 6a 3c 48 00 68 82 42 29 d0
+			3b 4a 12 68 10 1a 0a 69 02 f0 0f 02 02 2a 10 d1
+			c9 68 64 22 49 1c 51 43 a1 fb 00 50 01 fb 04 06
+			f8 f5 e4 fb 0a 21 b0 fb f1 f2 23 46 31 46 28 46
+			08 e0 22 49 00 23 09 68 a1 fb 00 02 01 fb 04 21
+			4f f4 64 72 37 f6 93 fa 00 28 03 d0 bd e8 70 40
+			2a f6 12 bf 70 bd 08 49 08 78 80 07 0a d5 25 48
+			42 68 4b 68 22 ea 03 02 42 60 02 68 89 68 22 ea
+			01 02 02 60 70 47 00 00 0c 89 20 00 6c 15 20 00
+			80 1c 20 00 e5 08 20 00 4c 04 20 00 44 04 20 00
+			54 04 20 00 f0 08 20 00 3c 04 20 00 fe ff ff 03
+			aa 0a 20 00 ab 0a 20 00 0c 0b 20 00 e0 00 60 00
+			a4 0a 20 00 20 00 32 00 ae 0a 20 00 08 0b 20 00
+			20 cf 01 00 34 09 20 00 04 0c 20 00 a9 0a 20 00
+			d0 0a 20 00 ac 0a 20 00 f4 0a 20 00 f8 0a 20 00
+			a8 4f 20 00 08 89 20 00 98 88 20 00 00 0b 20 00
+			10 0b 20 00 94 00 32 00 2d e9 f0 41 05 46 f8 f5
+			61 fb 80 46 f8 f5 61 fb 4f f4 48 14 20 69 00 f0
+			0f 00 02 28 03 d0 17 48 35 b9 01 78 21 b1 40 46
+			bd e8 f0 41 f8 f5 54 bb df f8 4c c0 13 4d 9c f8
+			01 20 13 4e 13 4f 00 21 2a b1 32 68 2b 78 d2 1a
+			52 1e 3a 60 01 70 2b 78 3a 68 1a 44 33 68 9a 42
+			0d d2 32 68 3a 60 01 22 02 70 e1 61 e0 69 01 28
+			fc d1 26 20 60 61 e2 61 a0 69 00 28 fc d1 8c f8
+			01 10 d4 e7 a8 0a 20 00 0c 89 20 00 a7 0a 20 00
+			7c 0a 20 00 f0 0a 20 00 2d e9 f0 41 26 48 27 4f
+			04 68 23 e0 20 46 07 f6 f1 f8 20 46 07 f6 bb f8
+			20 46 07 f6 ba f8 05 46 20 46 07 f6 b0 fc 20 46
+			07 f6 2d fa 06 46 20 46 07 f6 d3 f8 a6 f5 24 51
+			02 39 07 d1 02 2d 05 d1 00 78 80 07 02 d0 01 20
+			bd e8 f0 81 20 46 07 f6 b0 f8 04 46 38 68 84 42
+			d8 d3 00 20 f4 e7 10 b5 ff f7 ce ff 58 b1 03 f6
+			f9 fe 00 28 16 db 03 f6 c5 fe bd e8 10 40 4f f0
+			ff 30 03 f6 e6 be 03 f6 ed fe 00 28 0a da 08 48
+			00 68 90 f8 32 00 03 f6 d9 fe bd e8 10 40 05 48
+			03 f6 a0 be 10 bd 00 00 78 07 20 00 7c 07 20 00
+			54 08 20 00 29 ff 00 00 2d e9 f0 41 0e 46 2b 49
+			0a 68 22 f4 b8 72 0a 60 0a 68 00 f4 b8 70 42 ea
+			00 02 0a 60 4f f0 00 04 4f f0 01 07 07 fa 04 f5
+			2e 42 3d d0 1c b9 00 23 30 22 0d 21 04 e0 01 2c
+			0a d1 00 23 30 22 0e 21 00 20 00 f6 1f fd 00 23
+			30 22 0d 21 01 20 29 e0 02 2c 03 d1 00 23 30 22
+			0f 21 f1 e7 03 2c 03 d1 00 23 30 22 08 21 f1 e7
+			04 2c 03 d1 00 23 30 22 09 21 eb e7 05 2c 03 d1
+			00 23 30 22 0a 21 e5 e7 06 2c 03 d1 00 23 30 22
+			0b 21 df e7 07 2c 03 d1 00 23 30 22 19 46 04 e0
+			08 2c 05 d1 00 23 30 22 01 21 02 20 00 f6 ee fc
+			64 1c 09 2c ba db bd e8 f0 81 00 00 30 84 31 00
+			05 49 08 78 40 1c 10 f0 ff 00 08 70 01 d1 01 20
+			08 70 08 78 70 47 00 00 94 06 20 00 30 b5 b2 28
+			0d d1 30 4a 2e 4c 10 78 ff 25 04 f8 30 50 04 eb
+			c0 04 dd 1e 40 1c 65 60 10 70 58 18 30 bd 00 20
+			30 bd 2d e9 fc 47 27 49 05 46 48 78 a8 42 45 d0
+			08 78 6e 46 00 b9 fe e7 00 24 21 4f 04 e0 17 f8
+			34 20 aa 42 02 d0 64 1c 84 42 f8 d3 89 46 05 f0
+			ff 08 84 42 19 d1 00 24 13 e0 07 eb c4 00 40 68
+			07 22 31 46 0a f6 b0 fa b0 79 a8 42 02 d1 07 f8
+			34 80 11 e0 17 f8 34 10 ff 29 01 d1 07 f8 34 00
+			64 1c 99 f8 00 00 84 42 e7 d3 07 eb c4 00 40 68
+			07 22 31 46 0a f6 98 fa 70 78 b1 78 00 eb 01 22
+			d6 f8 03 00 12 1f 20 f0 7f 41 07 eb c4 00 40 68
+			92 b2 c0 1d 0a f6 88 fa 89 f8 01 80 bd e8 fc 87
+			d0 89 20 00 20 89 20 00 2d e9 fc 41 8c 4f 04 00
+			3e 78 7a d0 8b 48 00 78 00 28 76 d1 4f f4 64 15
+			d5 f8 5c 01 20 f0 c0 00 c5 f8 5c 01 d9 b1 05 20
+			38 70 12 f6 a4 fd 02 20 0a f6 06 f9 26 20 0a f6
+			03 f9 80 46 3e 70 12 f6 9a fd 80 20 80 2c 00 d9
+			20 46 40 30 7c 49 20 f0 7f 00 a0 fb 01 01 42 46
+			4f ea e8 73 17 e0 40 20 40 2c 00 d9 20 46 20 30
+			d5 f8 5c 11 20 f0 3f 00 41 f0 c0 01 c5 f8 5c 11
+			d5 f8 30 11 41 f0 04 01 c5 f8 30 11 41 0c c0 03
+			00 23 4f f4 7a 72 37 f6 82 f8 04 46 05 f5 a0 75
+			68 69 0e 46 20 f4 a0 40 68 61 68 46 00 f6 d0 fa
+			dd e9 00 23 a0 18 2a 68 46 eb 03 01 22 f4 7c 42
+			2a 60 42 0b 42 ea c1 42 92 02 2b 68 02 f4 7c 42
+			1a 43 2a 60 c0 0c 40 ea 41 30 80 b2 68 60 07 21
+			02 20 00 f6 1a fd 00 23 40 f2 09 62 07 21 02 20
+			00 f6 fc fb 07 21 02 20 00 f6 0f fd 01 20 01 f6
+			18 fc 68 69 40 f4 50 40 68 61 bd e8 fc 81 4f f4
+			64 10 d0 f8 54 11 4f f4 50 43 8b 43 4b 49 4f f0
+			01 02 11 d1 d0 f8 5c 31 5b 06 0c d4 d0 f8 30 31
+			5b 07 00 d5 0a 70 d0 f8 30 21 22 f0 04 02 c0 f8
+			30 21 00 20 48 70 70 47 d0 f8 30 31 5b 07 00 d5
+			0a 70 d0 f8 30 11 21 f0 04 01 c0 f8 30 11 70 47
+			2d e9 f0 41 04 46 0f 46 f8 f5 44 f9 80 46 f8 f5
+			44 f9 36 4d 00 26 2e 70 39 46 20 46 ff f7 44 ff
+			ff f7 c5 ff 32 48 4f f4 64 14 00 79 40 07 d4 f8
+			48 01 02 d5 20 f4 c0 70 01 e0 40 f4 c0 70 c4 f8
+			48 01 68 78 01 27 80 b1 d4 f8 30 01 40 f0 02 00
+			c4 f8 30 01 27 60 4f f4 fa 70 11 f6 97 f9 01 f6
+			fe fe 4f f4 7a 70 11 f6 91 f9 04 f1 e0 04 20 6d
+			40 f0 01 00 20 65 41 f2 70 70 11 f6 87 f9 a0 6e
+			20 f0 80 00 a0 66 20 6d 20 f0 02 00 20 65 54 f8
+			e0 0c 20 f0 01 00 44 f8 e0 0c 6f 70 60 6f 20 f4
+			10 40 60 67 20 6e 20 f4 7c 40 20 66 66 66 e0 6f
+			20 f0 01 00 e0 67 a4 f1 e0 04 4f f0 01 00 01 f6
+			39 fb 28 78 30 b1 2e 70 d4 f8 30 01 40 f0 04 00
+			c4 f8 30 01 40 46 bd e8 f0 41 f8 f5 e1 b8 00 00
+			a4 0a 20 00 00 00 00 00 00 aa 37 00 22 89 20 00
+			f4 05 20 00 01 b5 9d f8 00 00 01 22 00 f0 0f 00
+			00 90 52 48 69 46 00 68 02 f6 96 fd 08 bd 2d e9
+			f0 47 82 46 00 27 0f 60 4d 48 88 46 17 60 81 78
+			4c 4e 91 46 51 45 06 d1 b5 88 ed 1d 28 46 29 f6
+			1c fb 04 00 01 d1 b7 71 0c e0 30 68 20 60 b0 88
+			a0 80 a0 1d b2 88 31 68 09 f6 15 fd 28 b9 20 46
+			29 f6 24 fb 00 20 bd e8 f0 87 6a 1e 21 46 50 46
+			09 f6 fd fc 61 19 01 f8 01 0c c9 f8 00 50 c8 f8
+			00 40 b1 88 30 68 08 44 30 60 01 20 09 f6 e1 fc
+			01 20 e8 e7 1c b5 32 4b 02 46 01 46 00 79 9b 78
+			01 f1 04 01 4f f0 00 04 98 42 12 d1 01 94 00 94
+			08 78 6a 46 01 a9 ff f7 b2 ff 01 28 0f d1 27 48
+			dd e9 00 21 00 68 02 f6 3f fd 01 98 29 f6 ee fa
+			1c bd 12 88 49 1c 52 1e 92 b2 09 f6 41 fd 21 46
+			01 28 00 d0 0e 21 bd e8 1c 40 08 46 8a e7 10 b5
+			1c 4c 02 46 20 89 00 28 0b d0 e0 68 41 1c 09 d1
+			01 2a 06 d0 b4 f9 08 10 00 22 17 48 03 f6 7e fe
+			e0 60 10 bd bd e8 10 40 03 f6 8a be 70 b5 04 46
+			05 88 03 f6 69 fc c5 f3 0b 01 88 42 15 d1 c5 f3
+			01 30 02 28 11 d1 61 88 a2 88 20 1d 09 1f 8a 42
+			0b d1 06 4a 41 88 12 68 91 42 06 d1 07 49 09 68
+			00 29 02 d0 bd e8 70 40 08 47 70 bd a0 88 20 00
+			a4 08 20 00 ac 08 20 00 e9 1e 01 00 9c 88 20 00
+			2d e9 f0 41 07 46 00 20 04 46 2f 4d 2f 4e 07 e0
+			55 f8 24 10 19 b1 38 46 88 47 00 28 03 d1 64 1c
+			31 68 8c 42 f4 db bd e8 f0 81 2d e9 f0 43 87 b0
+			90 46 0e 9f 81 46 0c 46 02 46 1e 46 39 46 6c 20
+			06 f6 d6 fd 05 46 01 46 21 a0 03 f6 f3 fa 8d bb
+			48 46 07 f6 94 f9 31 19 81 42 2c dc 7e b1 48 46
+			06 f6 b7 fd 01 19 32 46 01 a8 37 f6 6f fa 48 46
+			06 f6 af fd 20 44 32 46 41 46 37 f6 67 fa 48 46
+			06 f6 83 fd 80 46 a1 19 48 46 07 f6 6e f9 00 2f
+			16 db 48 46 ff f7 b4 ff 05 00 11 d0 48 46 06 f6
+			98 fd 20 44 32 46 01 a9 37 f6 50 fa 41 46 48 46
+			07 f6 5b f9 04 e0 84 42 01 db 07 25 00 e0 0d 25
+			28 46 07 b0 bd e8 f0 83 24 1b 20 00 70 07 20 00
+			0d 20 70 65 72 6d 69 73 73 69 6f 6e 20 63 68 65
+			63 6b 20 72 65 74 43 6f 64 65 20 3d 20 25 30 32
+			78 20 00 00 db 76 03 00 00 00 00 00 8d 74 03 00
+			00 00 00 00 69 79 03 00 53 79 20 00 c9 65 20 00
+			00 00 00 00 1f 79 03 00 3d 79 03 00 59 75 03 00
+			99 eb 01 00 a9 7d 20 00 2d e8 01 00 00 00 00 00
+			c3 f2 01 00 00 00 00 00 61 5b 20 00 75 7d 20 00
+			91 5c 20 00 5b ee 01 00 81 e8 01 00 75 77 20 00
+			8b ba 00 00 00 00 00 00 21 bb 00 00 00 00 00 00
+			00 00 00 00 00 00 00 00 9f ed 00 00 d9 e9 00 00
+			00 00 00 00 03 ea 00 00 00 00 00 00 71 e9 00 00
+			00 00 00 00 53 ea 00 00 d9 ed 00 00 c5 eb 00 00
+			c1 ed 00 00 05 ec 00 00 00 00 00 00 47 ec 00 00
+			00 00 00 00 2b eb 00 00 f1 ed 00 00 a9 ec 00 00
+			09 ee 00 00 00 00 00 00 00 00 00 00 f3 ef 00 00
+			00 00 00 00 35 f0 00 00 00 00 00 00 00 00 00 00
+			17 ee 00 00 00 00 00 00 31 ee 00 00 07 ef 00 00
+			08 8a 20 00 00 00 00 00 7d 6d 20 00 ad d9 00 00
+			b1 d9 00 00 e7 d9 00 00 0b 63 20 00 1b da 00 00
+			35 da 00 00 f9 62 20 00 6f da 00 00 8d 73 20 00
+			9f da 00 00
+			
+     } END_COMMENTED_BYTES          
+}                                   
+# TIER2: end of RO_AREA 
+                                    
+# TIER2: RW_AREA from tier2/brcm/generic/bld/A_20732A0/20732_ram_ext.elf       
+ENTRY "Data" = "RW_AREA from tier2/brcm/generic/bld/A_20732A0/20732_ram_ext.elf"   
+{                                   
+  "Address" = 0x0020889c
+  "Data" =                          
+   COMMENTED_BYTES                  
+     {                              
+        <hex>                       
+            00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+			04 00 00 00 10 00 00 00 ff ff ff 7f 00 00 00 00
+			00 00 00 00 bf dd 03 00 e7 dd 03 00 e9 dd 03 00
+			03 de 03 00 0d 75 20 00 4b de 03 00 bf de 03 00
+			3b df 03 00 99 df 03 00 6b de 03 00 a3 df 03 00
+			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+			00 00 00 00 08 00 00 00 03 00 00 00 00 00 00 00
+			00 00 00 00 00 ff 00 01
+			
+     } END_COMMENTED_BYTES          
+}                                   
+# TIER2: end of RW_AREA 
+                                    
+# TIER2: CONFIG_AREA from tier2/brcm/generic/bld/A_20732A0/20732_ram_ext.elf       
+ENTRY "Data" = "CONFIG_AREA from tier2/brcm/generic/bld/A_20732A0/20732_ram_ext.elf"   
+{                                   
+  "Address" = 0x0020882c
+  "Data" =                          
+   COMMENTED_BYTES                  
+     {                              
+        <hex>                       
+            08 c8 00 00 10 82 00 00 4b 85 00 00 14 80 00 00
+			07 c9 00 00 0d 91 00 00 06 00 00 00 10 00 00 00
+			e9 01 00 00 e0 00 60 00 7c 00 00 00 a4 01 60 00
+			28 00 00 00 1c 02 60 00 a8 06 00 00 20 02 60 00
+			a0 07 00 00 24 02 60 00 a8 06 00 00 28 02 60 00
+			e0 07 00 00 f4 02 60 00 00 00 00 00 f0 03 60 00
+			00 10 00 00 f8 03 60 00 66 10 00 00 64 00 00 00
+			
+     } END_COMMENTED_BYTES          
+}                                   
+# TIER2: end of CONFIG_AREA 
+                                    
+# TIER2: INIT_AREA from tier2/brcm/generic/bld/A_20732A0/20732_ram_ext.elf       
+ENTRY "Data" = "INIT_AREA from tier2/brcm/generic/bld/A_20732A0/20732_ram_ext.elf"   
+{                                   
+  "Address" = 0x00208a0c
+  "Data" =                          
+   COMMENTED_BYTES                  
+     {                              
+        <hex>                       
+            10 b5 1d 48 1d 49 37 f6 f5 f8 1e 49 1c 48 08 60
+			1e 49 1d 48 08 60 1e 48 0a 21 01 60 1d 49 40 f2
+			d5 20 08 80 1c 49 48 f2 14 10 08 60 af f3 00 80
+			00 f0 4a f8 19 48 00 78 c0 f3 02 11 4f f4 48 10
+			04 29 03 d1 41 6f 16 4a 11 40 41 67 c1 6f 21 f4
+			00 31 c1 67 14 48 13 49 c0 f8 48 11 13 49 01 64
+			14 49 13 48 08 60 00 f0 27 f8 00 f0 35 f8 bd e8
+			10 40 00 f0 3f b8 00 00 24 89 20 00 e4 00 00 00
+			e5 5a 20 00 f8 58 20 00 08 8a 20 00 50 0f 20 00
+			18 0f 20 00 1c 04 20 00 f0 0f 20 00 a0 58 20 00
+			ff ff f9 f9 75 5f 20 00 9c 26 20 00 a3 74 20 00
+			c0 88 20 00 1c 15 20 00 02 49 01 48 08 60 70 47
+			fc 87 20 00 30 07 20 00 02 49 01 48 08 60 70 47
+			95 81 20 00 e0 08 20 00 04 49 03 48 08 60 04 49
+			01 20 48 70 70 47 00 00 61 82 20 00 f4 05 20 00
+			22 89 20 00 04 49 03 48 08 60 04 49 fa 20 08 60
+			70 47 00 00 3d 85 20 00 9c 88 20 00 a0 88 20 00
+			
+     } END_COMMENTED_BYTES          
+}                                   
+# TIER2: end of INIT_AREA 
+
+# ^^^ $AUTOGEN(INCLUDE{sections.agi})
+# vvv $AUTOGEN(INCLUDE{agiauto2.agi})
+ENTRY "Patch Entry" = "idle_main_reInitMmAvail_CheckUartConnectedAddin"
+{
+	"Patch index" = 0 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x000323bc # <<< $AUTOGEN(ADDR{idle_main} + 0xF4)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		d3 f1 ac ba # <<< $AUTOGEN (BW to (ADDR{reInitMmAvail_CheckUartConnectedAddin} - ADDR{idle_main} - 0xF4))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205918 # <<< $AUTOGEN(ADDR{reInitMmAvail_CheckUartConnectedAddin})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "cfa_debug_PrintString_cfa_debug_PrintStringPatch"
+{
+	"Patch index" = 1 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001e100 # <<< $AUTOGEN(ADDR{cfa_debug_PrintString} + 0x0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		e7 f1 07 bf # <<< $AUTOGEN (BW to (ADDR{cfa_debug_PrintStringPatch} - ADDR{cfa_debug_PrintString} - 0x0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205f12 # <<< $AUTOGEN(ADDR{cfa_debug_PrintStringPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "legattdb_findInfo_0x4C"
+{
+	"Patch index" = 2 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000f458 # <<< $AUTOGEN(ADDR{legattdb_findInfo} + 0x4C)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		01 E0 8C 42
+	} END_COMMENTED_BYTES
+	"Code address" = 0
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "leatt_write_0x18"
+{
+	"Patch index" = 3 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000ecc0 # <<< $AUTOGEN(ADDR{leatt_write} + 0x18)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		51 D5 04 26
+	} END_COMMENTED_BYTES
+	"Code address" = 0
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "leatt_write_0xB8"
+{
+	"Patch index" = 4 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000ed60 # <<< $AUTOGEN(ADDR{leatt_write} + 0xB8)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		44 26 A8 F1
+	} END_COMMENTED_BYTES
+	"Code address" = 0
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "bcsulp_testTaskFsmSetup_bcsulp_testTaskFsmSetup_patch_ARM"
+{
+	"Patch index" = 5 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0003de04 # <<< $AUTOGEN(ADDR{bcsulp_testTaskFsmSetup} + 0x02)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		c7 f1 92 bd # <<< $AUTOGEN (BW to (ADDR{bcsulp_testTaskFsmSetup_patch_ARM} - ADDR{bcsulp_testTaskFsmSetup} - 0x02))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x0020592c # <<< $AUTOGEN(ADDR{bcsulp_testTaskFsmSetup_patch_ARM})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "bcs_TimingVarInit_bcs_TimingVarInit_patch_ARM"
+{
+	"Patch index" = 6 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00033668 # <<< $AUTOGEN(ADDR{bcs_TimingVarInit} + 0x22)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		d2 f1 66 b9 # <<< $AUTOGEN (BW to (ADDR{bcs_TimingVarInit_patch_ARM} - ADDR{bcs_TimingVarInit} - 0x22))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205938 # <<< $AUTOGEN(ADDR{bcs_TimingVarInit_patch_ARM})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_initTaskRxDone__initTaskRxDone_glue"
+{
+	"Patch index" = 7 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0003ce88 # <<< $AUTOGEN(ADDR{_initTaskRxDone} + 0x06)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		c8 f1 5c bd # <<< $AUTOGEN (BW to (ADDR{_initTaskRxDone_glue} - ADDR{_initTaskRxDone} - 0x06))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205944 # <<< $AUTOGEN(ADDR{_initTaskRxDone_glue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_scanTaskCheckRxPkt__scanTaskCheckRxPkt_glue"
+{
+	"Patch index" = 8 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0003ca0c # <<< $AUTOGEN(ADDR{_scanTaskCheckRxPkt} + 0x44)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		c8 f1 a4 bf # <<< $AUTOGEN (BW to (ADDR{_scanTaskCheckRxPkt_glue} - ADDR{_scanTaskCheckRxPkt} - 0x44))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205958 # <<< $AUTOGEN(ADDR{_scanTaskCheckRxPkt_glue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "blecm_connUp_blecm_connUpPatch"
+{
+	"Patch index" = 9 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000ba0c # <<< $AUTOGEN(ADDR{blecm_connUp} + 0x0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fa f1 73 be # <<< $AUTOGEN (BW to (ADDR{blecm_connUpPatch} - ADDR{blecm_connUp} - 0x0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002066f6 # <<< $AUTOGEN(ADDR{blecm_connUpPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "DHM_hciReset_DHM_hdiResetGlue"
+{
+	"Patch index" = 10 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00021640 # <<< $AUTOGEN(ADDR{DHM_hciReset} + 0x02)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		e4 f1 90 b9 # <<< $AUTOGEN (BW to (ADDR{DHM_hdiResetGlue} - ADDR{DHM_hciReset} - 0x02))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205964 # <<< $AUTOGEN(ADDR{DHM_hdiResetGlue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lmulp_allocLcpBlock_lmulp_allocLcpBlockAddIn"
+{
+	"Patch index" = 11 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00038254 # <<< $AUTOGEN(ADDR{lmulp_allocLcpBlock} + 0x0A)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		cd f1 8a bb # <<< $AUTOGEN (BW to (ADDR{lmulp_allocLcpBlockAddIn} - ADDR{lmulp_allocLcpBlock} - 0x0A))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x0020596c # <<< $AUTOGEN(ADDR{lmulp_allocLcpBlockAddIn})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_taskActivationTime__taskActivationTimeAddIn"
+{
+	"Patch index" = 12 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00002158 # <<< $AUTOGEN(ADDR{_taskActivationTime} + 0x184)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		03 f2 0e bc # <<< $AUTOGEN (BW to (ADDR{_taskActivationTimeAddIn} - ADDR{_taskActivationTime} - 0x184))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205978 # <<< $AUTOGEN(ADDR{_taskActivationTimeAddIn})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmp_getLTK_0x1C"
+{
+	"Patch index" = 13 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000ced4 # <<< $AUTOGEN(ADDR{lesmp_getLTK} + 0x1C)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		00 E0 F9 E7
+	} END_COMMENTED_BYTES
+	"Code address" = 0
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "legattdb_checkPermission__legattdb_checkPermission"
+{
+	"Patch index" = 14 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000f208 # <<< $AUTOGEN(ADDR{legattdb_checkPermission} + 0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f7 f1 05 bb # <<< $AUTOGEN (BW to (ADDR{_legattdb_checkPermission} - ADDR{legattdb_checkPermission} - 0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00206816 # <<< $AUTOGEN(ADDR{_legattdb_checkPermission})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmpkeys_removeAllBondInfo_lesmpkeys_removeAllBondInfo_glue"
+{
+	"Patch index" = 15 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000cc4c # <<< $AUTOGEN(ADDR{lesmpkeys_removeAllBondInfo} + 0x3C)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f8 f1 a4 be # <<< $AUTOGEN (BW to (ADDR{lesmpkeys_removeAllBondInfo_glue} - ADDR{lesmpkeys_removeAllBondInfo} - 0x3C))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205998 # <<< $AUTOGEN(ADDR{lesmpkeys_removeAllBondInfo_glue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmpkeys_deleteBondInfo_lesmpkeys_deleteBondInfo_glue"
+{
+	"Patch index" = 16 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000c9dc # <<< $AUTOGEN(ADDR{lesmpkeys_deleteBondInfo} + 0x52)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f8 f1 e2 bf # <<< $AUTOGEN (BW to (ADDR{lesmpkeys_deleteBondInfo_glue} - ADDR{lesmpkeys_deleteBondInfo} - 0x52))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002059a4 # <<< $AUTOGEN(ADDR{lesmpkeys_deleteBondInfo_glue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmpkeys_allocKeyStorageIdx__lesmpkeys_allocKeyStorageIdx"
+{
+	"Patch index" = 17 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000c804 # <<< $AUTOGEN(ADDR{lesmpkeys_allocKeyStorageIdx} + 0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fa f1 42 b8 # <<< $AUTOGEN (BW to (ADDR{_lesmpkeys_allocKeyStorageIdx} - ADDR{lesmpkeys_allocKeyStorageIdx} - 0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x0020688c # <<< $AUTOGEN(ADDR{_lesmpkeys_allocKeyStorageIdx})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmp_stateHandler__lesmp_stateHandler"
+{
+	"Patch index" = 18 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000d09c # <<< $AUTOGEN(ADDR{lesmp_stateHandler} + 0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f9 f1 91 bc # <<< $AUTOGEN (BW to (ADDR{_lesmp_stateHandler} - ADDR{lesmp_stateHandler} - 0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002069c2 # <<< $AUTOGEN(ADDR{_lesmp_stateHandler})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmpkeys_init_lesmpkeys_init_asm"
+{
+	"Patch index" = 19 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000c73c # <<< $AUTOGEN(ADDR{lesmpkeys_init} + 2)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f9 f1 39 b9 # <<< $AUTOGEN (BW to (ADDR{lesmpkeys_init_asm} - ADDR{lesmpkeys_init} - 2))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002059b2 # <<< $AUTOGEN(ADDR{lesmpkeys_init_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmpkeys_find_lesmpkeys_find_asm"
+{
+	"Patch index" = 20 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000c790 # <<< $AUTOGEN(ADDR{lesmpkeys_find} + 6)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f9 f1 fa b8 # <<< $AUTOGEN (BW to (ADDR{lesmpkeys_find_asm} - ADDR{lesmpkeys_find} - 6))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205988 # <<< $AUTOGEN(ADDR{lesmpkeys_find_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmpkeys_storeBondedInfo_lesmpkeys_storeBondedInfo_asm"
+{
+	"Patch index" = 21 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000c860 # <<< $AUTOGEN(ADDR{lesmpkeys_storeBondedInfo} + 6)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f9 f1 96 b8 # <<< $AUTOGEN (BW to (ADDR{lesmpkeys_storeBondedInfo_asm} - ADDR{lesmpkeys_storeBondedInfo} - 6))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205990 # <<< $AUTOGEN(ADDR{lesmpkeys_storeBondedInfo_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "bleappcfa_init_bleappcfa_initPatch"
+{
+	"Patch index" = 22 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000bf40 # <<< $AUTOGEN(ADDR{bleappcfa_init} + 0x0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fb f1 65 b8 # <<< $AUTOGEN (BW to (ADDR{bleappcfa_initPatch} - ADDR{bleappcfa_init} - 0x0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x0020700e # <<< $AUTOGEN(ADDR{bleappcfa_initPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "blecm_hciEvtHandler_blecm_hciEvtHandlerPatch"
+{
+	"Patch index" = 23 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000b6c4 # <<< $AUTOGEN(ADDR{blecm_hciEvtHandler} + 0x00)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fb f1 46 bd # <<< $AUTOGEN (BW to (ADDR{blecm_hciEvtHandlerPatch} - ADDR{blecm_hciEvtHandler} - 0x00))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00207154 # <<< $AUTOGEN(ADDR{blecm_hciEvtHandlerPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lel2cap_sendConnectionLessPkt_lel2cap_sendConnectionLessPktPatch"
+{
+	"Patch index" = 24 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000aff0 # <<< $AUTOGEN(ADDR{lel2cap_sendConnectionLessPkt} + 0x00)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fc f1 1f b9 # <<< $AUTOGEN (BW to (ADDR{lel2cap_sendConnectionLessPktPatch} - ADDR{lel2cap_sendConnectionLessPkt} - 0x00))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00207232 # <<< $AUTOGEN(ADDR{lel2cap_sendConnectionLessPktPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lesmp_recvKey_lesmp_recvKeyPatch"
+{
+	"Patch index" = 25 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000d784 # <<< $AUTOGEN(ADDR{lesmp_recvKey} + 0x02)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f9 f1 7b bd # <<< $AUTOGEN (BW to (ADDR{lesmp_recvKeyPatch} - ADDR{lesmp_recvKey} - 0x02))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x0020727e # <<< $AUTOGEN(ADDR{lesmp_recvKeyPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_connTaskDetermineMaxTxRxPair__connTaskDetermineMaxTxRxPairAddin"
+{
+	"Patch index" = 26 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001e900 # <<< $AUTOGEN(ADDR{_connTaskDetermineMaxTxRxPair} + 0x2A)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		e7 f1 5c b8 # <<< $AUTOGEN (BW to (ADDR{_connTaskDetermineMaxTxRxPairAddin} - ADDR{_connTaskDetermineMaxTxRxPair} - 0x2A))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002059bc # <<< $AUTOGEN(ADDR{_connTaskDetermineMaxTxRxPairAddin})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_connTaskIsRescheduled__connTaskIsRescheduled_asm"
+{
+	"Patch index" = 27 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001f048 # <<< $AUTOGEN(ADDR{_connTaskIsRescheduled} + 98)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		e6 f1 be bc # <<< $AUTOGEN (BW to (ADDR{_connTaskIsRescheduled_asm} - ADDR{_connTaskIsRescheduled} - 98))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002059c8 # <<< $AUTOGEN(ADDR{_connTaskIsRescheduled_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_connTaskRxDone__connTaskRxDone_asm"
+{
+	"Patch index" = 28 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001ed74 # <<< $AUTOGEN(ADDR{_connTaskRxDone} + 106)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		e6 f1 35 be # <<< $AUTOGEN (BW to (ADDR{_connTaskRxDone_asm} - ADDR{_connTaskRxDone} - 106))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002059e2 # <<< $AUTOGEN(ADDR{_connTaskRxDone_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_connTaskIsActivating__connTaskIsActivatingPatch"
+{
+	"Patch index" = 29 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001f108 # <<< $AUTOGEN(ADDR{_connTaskIsActivating} + 0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		e8 f1 63 b9 # <<< $AUTOGEN (BW to (ADDR{_connTaskIsActivatingPatch} - ADDR{_connTaskIsActivating} - 0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002073d2 # <<< $AUTOGEN(ADDR{_connTaskIsActivatingPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_connTaskIsCreating__connTaskIsCreating_asm"
+{
+	"Patch index" = 30 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001ef20 # <<< $AUTOGEN(ADDR{_connTaskIsCreating} + 116)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		e6 f1 6a bd # <<< $AUTOGEN (BW to (ADDR{_connTaskIsCreating_asm} - ADDR{_connTaskIsCreating} - 116))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002059f8 # <<< $AUTOGEN(ADDR{_connTaskIsCreating_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "emconninfo_setLinkEncryptedFlag_emconninfo_setLinkEncryptedFlag_patch"
+{
+	"Patch index" = 31 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000bf28 # <<< $AUTOGEN(ADDR{emconninfo_setLinkEncryptedFlag} + 0x02)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fb f1 10 bb # <<< $AUTOGEN (BW to (ADDR{emconninfo_setLinkEncryptedFlag_patch} - ADDR{emconninfo_setLinkEncryptedFlag} - 0x02))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x0020754c # <<< $AUTOGEN(ADDR{emconninfo_setLinkEncryptedFlag_patch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "dhmulp_connRxData__dhmulp_connRxData"
+{
+	"Patch index" = 32 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00037f88 # <<< $AUTOGEN(ADDR{dhmulp_connRxData} + 0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		cf f1 57 bb # <<< $AUTOGEN (BW to (ADDR{_dhmulp_connRxData} - ADDR{dhmulp_connRxData} - 0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x0020763a # <<< $AUTOGEN(ADDR{_dhmulp_connRxData})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lculp_connStop_lculp_connStop_addinGlue"
+{
+	"Patch index" = 33 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0003c3e4 # <<< $AUTOGEN(ADDR{lculp_connStop} + 0x30)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		c9 f1 10 bb # <<< $AUTOGEN (BW to (ADDR{lculp_connStop_addinGlue} - ADDR{lculp_connStop} - 0x30))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205a08 # <<< $AUTOGEN(ADDR{lculp_connStop_addinGlue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "pmu_main_pmu_mainAddin"
+{
+	"Patch index" = 34 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001b4fc # <<< $AUTOGEN(ADDR{pmu_main} + 0x04)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		ea f1 8c ba # <<< $AUTOGEN (BW to (ADDR{pmu_mainAddin} - ADDR{pmu_main} - 0x04))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205a18 # <<< $AUTOGEN(ADDR{pmu_mainAddin})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "blebat_measureAverage_blebat_measureAverage_asm"
+{
+	"Patch index" = 35 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x000048c4 # <<< $AUTOGEN(ADDR{blebat_measureAverage} + 0x00)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		01 f2 b6 b8 # <<< $AUTOGEN (BW to (ADDR{blebat_measureAverage_asm} - ADDR{blebat_measureAverage} - 0x00))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205a34 # <<< $AUTOGEN(ADDR{blebat_measureAverage_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "legattdb_readByGroupTypeUUID128_legattdb_readByGroupTypeUUID128_asm"
+{
+	"Patch index" = 36 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000f81c # <<< $AUTOGEN(ADDR{legattdb_readByGroupTypeUUID128} + 0xBA)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f6 f1 10 b9 # <<< $AUTOGEN (BW to (ADDR{legattdb_readByGroupTypeUUID128_asm} - ADDR{legattdb_readByGroupTypeUUID128} - 0xBA))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205a40 # <<< $AUTOGEN(ADDR{legattdb_readByGroupTypeUUID128_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "blecm_startAdv_blecm_startAdvPatch"
+{
+	"Patch index" = 37 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000b958 # <<< $AUTOGEN(ADDR{blecm_startAdv} + 0x0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fb f1 99 bf # <<< $AUTOGEN (BW to (ADDR{blecm_startAdvPatch} - ADDR{blecm_startAdv} - 0x0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x0020788e # <<< $AUTOGEN(ADDR{blecm_startAdvPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_connTaskReschedule__connTaskReschedule_asm"
+{
+	"Patch index" = 38 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001ea64 # <<< $AUTOGEN(ADDR{_connTaskReschedule} + 0x96)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		e6 f1 f8 bf # <<< $AUTOGEN (BW to (ADDR{_connTaskReschedule_asm} - ADDR{_connTaskReschedule} - 0x96))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205a58 # <<< $AUTOGEN(ADDR{_connTaskReschedule_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "puart_interruptHandler_puart_interruptHandler_asm"
+{
+	"Patch index" = 39 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00009338 # <<< $AUTOGEN(ADDR{puart_interruptHandler} + 0x0A)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fc f1 a4 bb # <<< $AUTOGEN (BW to (ADDR{puart_interruptHandler_asm} - ADDR{puart_interruptHandler} - 0x0A))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205a84 # <<< $AUTOGEN(ADDR{puart_interruptHandler_asm})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "_taskEndOfFrameSwitch___taskEndOfFrameSwitch"
+{
+	"Patch index" = 40 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00002a14 # <<< $AUTOGEN(ADDR{_taskEndOfFrameSwitch} + 0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		05 f2 8c b8 # <<< $AUTOGEN (BW to (ADDR{__taskEndOfFrameSwitch} - ADDR{_taskEndOfFrameSwitch} - 0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00207b30 # <<< $AUTOGEN(ADDR{__taskEndOfFrameSwitch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "pmu_timeToSleep_pmu_timeToSleepGlue"
+{
+	"Patch index" = 41 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001b378 # <<< $AUTOGEN(ADDR{pmu_timeToSleep} + 0xB4)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		ea f1 8c bb # <<< $AUTOGEN (BW to (ADDR{pmu_timeToSleepGlue} - ADDR{pmu_timeToSleep} - 0xB4))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205a94 # <<< $AUTOGEN(ADDR{pmu_timeToSleepGlue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "pmu_startLpoCalibration__pmu_startLpoCalibration"
+{
+	"Patch index" = 42 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0001ab28 # <<< $AUTOGEN(ADDR{pmu_startLpoCalibration} + 0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		ed f1 2a ba # <<< $AUTOGEN (BW to (ADDR{_pmu_startLpoCalibration} - ADDR{pmu_startLpoCalibration} - 0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00207f80 # <<< $AUTOGEN(ADDR{_pmu_startLpoCalibration})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lel2cap_getNewIdentifier_lel2cap_getNewIdentifierPatch"
+{
+	"Patch index" = 43 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000b194 # <<< $AUTOGEN(ADDR{lel2cap_getNewIdentifier} + 0x0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fc f1 f0 bf # <<< $AUTOGEN (BW to (ADDR{lel2cap_getNewIdentifierPatch} - ADDR{lel2cap_getNewIdentifier} - 0x0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00208178 # <<< $AUTOGEN(ADDR{lel2cap_getNewIdentifierPatch})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "mia_enterHidOff__mia_enterHidOff"
+{
+	"Patch index" = 44 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00009b04 # <<< $AUTOGEN(ADDR{mia_enterHidOff} + 0)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fe f1 58 bc # <<< $AUTOGEN (BW to (ADDR{_mia_enterHidOff} - ADDR{mia_enterHidOff} - 0))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x002083b8 # <<< $AUTOGEN(ADDR{_mia_enterHidOff})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "lel2cap_procACLData_lel2cap_procACLDataGlue"
+{
+	"Patch index" = 45 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000b0c0 # <<< $AUTOGEN(ADDR{lel2cap_procACLData} + 0x0C)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		fa f1 ec bc # <<< $AUTOGEN (BW to (ADDR{lel2cap_procACLDataGlue} - ADDR{lel2cap_procACLData} - 0x0C))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205a9c # <<< $AUTOGEN(ADDR{lel2cap_procACLDataGlue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "restartWatchdog_restartWatchdogGlue"
+{
+	"Patch index" = 46 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x00011efc # <<< $AUTOGEN(ADDR{restartWatchdog} + 0x02)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f3 f1 d7 bd # <<< $AUTOGEN (BW to (ADDR{restartWatchdogGlue} - ADDR{restartWatchdog} - 0x02))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205aae # <<< $AUTOGEN(ADDR{restartWatchdogGlue})
+	"Code" = "" 
+}
+ENTRY "Patch Entry" = "legattdb_writeAttrValue_legattdb_writeAttrValue_asm"
+{
+	"Patch index" = 47 # <<< $AUTOGEN(PATCH_INDEX)
+	"Break out block address" = 0x0000f9ac # <<< $AUTOGEN(ADDR{legattdb_writeAttrValue} + 0x06)
+	"Replacement instructions" =
+	COMMENTED_BYTES
+	{
+		<hex>
+		f6 f1 84 b8 # <<< $AUTOGEN (BW to (ADDR{legattdb_writeAttrValue_asm} - ADDR{legattdb_writeAttrValue} - 0x06))
+	} END_COMMENTED_BYTES
+	"Code address" = 0x00205ab8 # <<< $AUTOGEN(ADDR{legattdb_writeAttrValue_asm})
+	"Code" = "" 
+}
+
+# ^^^ $AUTOGEN(INCLUDE{agiauto2.agi})
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#sleepcyclecount
+#ENTRY "Data"="Config_sleepcyclecount"
+#{
+#	"Address"=0x208898
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		64 00 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#ble_setting
+#ENTRY "Data"="Config_ble_setting"
+#{
+#	"Address"=0x208850
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		e0 00 60 00 7c 00 00 00 a4 01 60 00 28 00 00 00 
+#		1c 02 60 00 a8 06 00 00 20 02 60 00 a0 07 00 00 
+#		24 02 60 00 a8 06 00 00 28 02 60 00 e0 07 00 00 
+#		f4 02 60 00 00 00 00 00 f0 03 60 00 00 10 00 00 
+#		f8 03 60 00 66 10 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#btrf_reg3BLE_test
+#ENTRY "Data"="Config_btrf_reg3BLE_test"
+#{
+#	"Address"=0x208844
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		06 00 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#btrf_reg5fBLE_test
+#ENTRY "Data"="Config_btrf_reg5fBLE_test"
+#{
+#	"Address"=0x208848
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		10 00 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#dsadcPuCtrlBLE_test
+#ENTRY "Data"="Config_dsadcPuCtrlBLE_test"
+#{
+#	"Address"=0x20882c
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		08 c8 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#kvcoCalPuCtrlBLE_test
+#ENTRY "Data"="Config_kvcoCalPuCtrlBLE_test"
+#{
+#	"Address"=0x20883c
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		07 c9 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#paDrCtrlBLE_test
+#ENTRY "Data"="Config_paDrCtrlBLE_test"
+#{
+#	"Address"=0x208840
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		0d 91 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#paRampCtrlBLE_test
+#ENTRY "Data"="Config_paRampCtrlBLE_test"
+#{
+#	"Address"=0x208834
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		4b 85 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#pwrRampCtrlBLE_test
+#ENTRY "Data"="Config_pwrRampCtrlBLE_test"
+#{
+#	"Address"=0x208838
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		14 80 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#txCtrl1BLE_test
+#ENTRY "Data"="Config_txCtrl1BLE_test"
+#{
+#	"Address"=0x20884c
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		e9 01 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+#Uncomment to override FW patch defaults.
+#To be used for debugging only. Final CGS cannot have this to optimize boot speed.
+#txPuCtrlBLE_test
+#ENTRY "Data"="Config_txPuCtrlBLE_test"
+#{
+#	"Address"=0x208830
+#	"Data"=
+#		COMMENTED_BYTES
+#		{
+#			<hex>
+#		10 82 00 00 #
+#		} END_COMMENTED_BYTES
+#}
+ 
+# ^^^ $AUTOGEN(INCLUDE{bld/agiauto.agi})
+
+
+
+# vvv $AUTOGEN(INCLUDE_FROM_TIER2{configdata_common.agi})
+
+# vvv $AUTOGEN(INCLUDE{patch/init/InitHooks.agi})
+
+ENTRY "Function Call"
+{
+        "Address" = 0x00208a0c # <<< $AUTOGEN(ADDR{postVSInitFunc_Init})
+}
+
+# end of InitHooks.agi
+
+# ^^^ $AUTOGEN(INCLUDE{patch/init/InitHooks.agi})
+
+
+
+#################################
+# Custom Crystal warm up time
+#################################
+
+ENTRY "PMU Crystal Warm up Time"
+{
+	"Crystal warm up time" = 5000
+}
+
+
+
+#################################
+# Custom I2C EEPROM Speed
+#################################
+
+ENTRY "I2C Speed"
+{
+	"Speed" = "400 KHz"
+}
+
+
+#################################
+#  Low power configuration
+#################################
+
+ENTRY "Sleep Mode Configuration"
+{
+    "Sleep mode" = "HIDD" 
+    "Sleep enable" = 0
+}# SPAR: .text from ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf
+ENTRY "Data" = ".text from ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf"
+{
+    "Address" = 0x00208a08
+    "Data" =
+      COMMENTED_BYTES
+          {
+            <hex>
+                 07 b5 08 48 40 f6 4b 21 00 f5 2a 62 02 f1 14 03
+                 1a 32 00 92 04 4a 01 92 a3 f1 69 02 02 f6 fa fb
+                 0e bd 00 bf fc ae 20 00 c1 ae 20 00 03 4a 04 4b
+                 1a 60 04 4b 02 22 1a 70 70 47 00 bf 09 8a 20 00
+                 00 04 20 00 9c 06 20 00 08 b5 07 4b 00 22 1a 80
+                 01 f6 4e ff 02 20 01 f6 3d ff 40 f6 c4 10 18 21
+                 bd e8 08 40 01 f6 09 bf a8 ba 20 00 08 b5 1b 20
+                 01 f6 58 ff 80 b2 08 bd 08 b5 07 20 01 f6 52 ff
+                 80 b2 08 bd 08 b5 1d 20 01 f6 4c ff 80 b2 08 bd
+                 08 b5 06 20 01 f6 46 ff 80 b2 08 bd 70 47 00 00
+                 05 4b 58 43 42 f2 10 73 90 fb f3 f0 00 f5 96 40
+                 01 30 00 b2 70 47 00 bf 88 1e fe ff 03 04 02 d4
+                 40 00 80 b2 70 47 4f f6 ff 70 70 47 00 00 00 00
+                 40 f6 07 13 98 42 10 b5 61 d8 84 b2 23 b2 1c 46
+                 da 17 5c 43 b0 f5 66 7f 10 d9 6f f0 03 01 59 43
+                 35 48 00 fb 02 12 a3 fb 00 01 51 18 2a a3 d3 e9
+                 00 23 12 18 43 eb 01 03 30 49 3b e0 b0 f5 cf 7f
+                 10 d9 6f f0 08 01 59 43 2d 48 00 fb 02 12 a3 fb
+                 00 01 51 18 22 a3 d3 e9 00 23 12 18 43 eb 01 03
+                 28 49 27 e0 cd 28 10 d9 6f f0 15 01 59 43 26 48
+                 00 fb 02 12 a3 fb 00 01 51 18 1b a3 d3 e9 00 23
+                 12 18 43 eb 01 03 21 49 14 e0 6f 28 98 bf 41 f6
+                 58 30 1e d9 6f f0 2e 01 59 43 1d 48 00 fb 02 12
+                 a3 fb 00 01 51 18 12 a3 d3 e9 00 23 12 18 43 eb
+                 01 03 18 49 c1 fb 04 23 98 b2 02 b2 41 f6 58 33
+                 9a 42 c8 bf 18 46 04 dc 12 f5 7a 7f 01 da 4f f6
+                 18 40 00 b2 10 bd 00 bf 23 33 f6 8b 2c 0d 00 00
+                 07 a7 2e e8 1c 17 00 00 ae da f3 f8 34 21 00 00
+                 ad 8f 7f 71 75 2b 00 00 b9 7d 03 e4 8c e7 22 00
+                 45 f3 00 68 02 61 e9 00 f9 a5 b8 fc 06 a0 cd 04
+                 f7 f6 19 88 77 7e d5 14 00 20 08 b5 01 46 03 46
+                 4f f4 80 72 ff f5 a2 ff 0a 4b 00 20 01 22 58 70
+                 98 70 d8 70 18 71 58 71 1a 70 01 46 4f f4 80 72
+                 03 46 ff f5 93 ff fa f5 74 ff bd e8 08 40 08 f6
+                 67 be 00 bf 5c 04 20 00 04 20 01 21 01 f0 92 be
+                 05 20 01 21 01 f0 8e be 04 20 00 21 07 f6 9d b8
+                 ff f7 fa bf 00 20 01 46 07 f6 97 b8 7f b5 6e 20
+                 69 46 08 f6 58 f9 9d f8 02 30 ff 2b 02 d0 01 33
+                 8d f8 02 30 69 46 6e 20 08 f6 5a f9 0d f1 02 01
+                 9d f8 00 20 6e 20 08 f6 c9 f9 07 b0 00 bd 08 b5
+                 08 f6 4e f9 18 b1 bd e8 08 40 ff f7 df bf 08 bd
+                 08 b5 08 f6 38 f9 18 b1 bd e8 08 40 ff f7 d6 bf
+                 08 bd 00 00 f0 b5 95 b0 05 46 06 f6 a7 fa 04 46
+                 28 46 06 f6 72 fa 07 46 28 46 06 f6 92 fa 41 2c
+                 06 46 00 f0 d4 81 26 d8 30 2c 00 f0 7b 81 10 d8
+                 23 2c 00 f0 35 81 05 d8 13 2c 47 d0 18 2c 40 f0
+                 66 82 5c e0 29 2c 00 f0 5f 81 2b 2c 40 f0 5f 82
+                 62 e1 3b 2c 00 f0 86 81 06 d8 37 2c 00 f0 76 81
+                 39 2c 40 f0 54 82 77 e1 3d 2c 00 f0 81 81 3f 2c
+                 40 f0 4d 82 90 e1 54 2c 00 f0 ef 81 11 d8 4e 2c
+                 00 f0 d1 81 06 d8 43 2c 00 f0 b3 81 4c 2c 40 f0
+                 3e 82 c2 e1 50 2c 00 f0 cc 81 52 2c 40 f0 37 82
+                 cd e1 5a 2c 00 f0 03 82 06 d8 56 2c 00 f0 e3 81
+                 58 2c 40 f0 2c 82 ec e1 67 2c 00 f0 19 82 69 2c
+                 00 f0 1c 82 61 2c 40 f0 22 82 fe e1 20 46 0c a9
+                 0d f1 32 05 ff f7 8c ff 0b 21 00 22 28 46 36 f6
+                 33 ff 15 2f b4 bf 3a 46 15 22 31 46 28 46 36 f6
+                 e5 fe 20 46 0c a9 ff f7 72 ff 11 20 03 e2 20 46
+                 0c a9 ff f7 75 ff 9d f8 32 30 da 07 53 d4 0a 2b
+                 00 f2 fd 81 df e8 13 f0 0b 00 fb 01 15 00 fb 01
+                 0d 00 fb 01 0f 00 fb 01 11 00 fb 01 13 00 12 24
+                 08 e0 14 24 06 e0 15 24 04 e0 16 24 02 e0 17 24
+                 00 e0 13 24 1a 20 0c a9 ff f7 52 ff 9d f8 32 30
+                 1c 20 0c a9 8d f8 04 30 ff f7 4a ff 9d f8 32 30
+                 1e 20 0c a9 0d f1 32 06 0d f1 06 05 8d f8 05 30
+                 ff f7 3e ff 14 22 31 46 28 46 36 f6 9f fe 20 20
+                 0c a9 ff f7 35 ff 31 46 14 22 0d f1 1a 00 36 f6
+                 95 fe 20 46 01 a9 2a 22 01 f0 5f fb 9d f8 32 30
+                 00 2b 40 f0 b4 81 9d f8 04 00 9d f8 05 10 2a 46
+                 01 f0 d6 f8 ab e1 01 3b 0a 2b 00 f2 a8 81 df e8
+                 13 f0 0b 00 a6 01 1a 00 a6 01 0e 00 a6 01 11 00
+                 a6 01 14 00 a6 01 17 00 bf 4a 12 20 0d e0 bf 4a
+                 14 20 0a e0 be 4a 15 20 07 e0 be 4a 16 20 04 e0
+                 bd 4a 17 20 01 e0 bd 4a 13 20 2a 23 01 a9 01 f0
+                 38 fb 1a 20 0c a9 ff f7 f3 fe 9d f8 04 30 0d f1
+                 32 04 1a 20 0c a9 8d f8 32 30 ff f7 e0 fe 9d f8
+                 30 20 1a 20 21 46 08 f6 a1 f8 1c 20 0c a9 ff f7
+                 df fe 9d f8 05 30 1c 20 0c a9 8d f8 32 30 ff f7
+                 ce fe 9d f8 30 20 1c 20 21 46 08 f6 8f f8 1e 20
+                 0c a9 ff f7 cd fe 14 22 0d f1 06 01 20 46 36 f6
+                 2d fe 1e 20 0c a9 ff f7 ba fe 9d f8 30 20 1e 20
+                 21 46 08 f6 7b f8 20 20 0c a9 ff f7 b9 fe 14 22
+                 0d f1 1a 01 20 46 36 f6 19 fe 20 20 0c a9 ff f7
+                 a6 fe 9d f8 30 20 20 20 21 46 08 f6 67 f8 36 e1
+                 20 46 0c a9 ff f7 a4 fe 9d f8 32 30 06 2b 00 f2
+                 2e 81 df e8 13 f0 07 00 0c 00 14 00 1a 00 1f 00
+                 2c 01 24 00 16 20 02 f6 c1 fe 00 20 03 e0 16 20
+                 02 f6 bc fe 01 20 02 21 01 f0 ec fc 17 e1 16 20
+                 02 f6 b4 fe 02 20 01 46 f6 e7 16 20 02 f6 ae fe
+                 03 20 f0 e7 16 20 02 f6 a9 fe 04 20 eb e7 16 20
+                 02 f6 a4 fe 06 20 e6 e7 20 46 0c a9 ff f7 70 fe
+                 18 20 0c a9 02 46 f8 e0 20 46 0c a9 ff f7 68 fe
+                 19 20 f0 e0 2e 20 0c a9 ff f7 62 fe 20 46 0c a9
+                 9d f8 32 50 ff f7 5c fe 9d f8 33 10 9d f8 32 30
+                 28 46 43 ea 01 21 00 f0 e3 fd e0 e0 20 46 0c a9
+                 ff f7 4e fe 1a 20 d6 e0 20 46 0c a9 ff f7 48 fe
+                 1b 20 d0 e0 20 46 0c a9 ff f7 42 fe 1c 20 ca e0
+                 20 46 0c a9 ff f7 3c fe 1d 20 0c a9 18 22 01 f0
+                 6c fa 9d f8 32 30 00 20 03 f0 03 03 14 a9 01 f8
+                 05 3d 02 46 03 46 17 e0 20 46 0c a9 ff f7 28 fe
+                 1e 20 0c a9 18 22 01 f0 58 fa 9d f8 32 30 00 20
+                 c3 f3 00 12 03 f0 0f 03 8d f8 4c 20 8d f8 4d 30
+                 01 46 13 aa 0d f1 4d 03 01 f0 e5 f8 9f e0 20 46
+                 0c a9 ff f7 0d fe 1f 20 0c a9 18 22 01 f0 3d fa
+                 9d f8 32 30 14 a8 03 f0 07 03 00 f8 02 3d 00 21
+                 10 e0 20 46 0c a9 ff f7 fb fd 20 20 0c a9 18 22
+                 01 f0 2b fa 9d f8 32 30 14 a9 03 f0 03 03 01 f8
+                 01 3d 00 20 01 f0 2d f9 79 e0 20 46 0c a9 ff f7
+                 e7 fd 21 20 6f e0 20 46 0c a9 ff f7 e1 fd 22 20
+                 69 e0 20 46 0c a9 ff f7 db fd 23 20 63 e0 20 46
+                 0c a9 ff f7 d5 fd 24 20 0c a9 18 22 01 f0 05 fa
+                 9d f8 32 00 01 f0 28 fb 59 e0 20 46 0c a9 ff f7
+                 c7 fd 25 20 0c a9 18 22 01 f0 f7 f9 9d f8 32 00
+                 01 f0 25 fb 4b e0 20 46 0c a9 ff f7 b9 fd 26 20
+                 0c a9 18 22 01 f0 e9 f9 9d f8 32 00 01 f0 22 fb
+                 3d e0 20 46 0c a9 ff f7 ab fd 27 20 0c a9 18 22
+                 01 f0 db f9 9d f8 32 00 01 f0 1f fb 2f e0 20 46
+                 0c a9 ff f7 9d fd 28 20 0c a9 18 22 01 f0 cd f9
+                 9d f8 32 00 01 f0 1c fb 21 e0 20 46 0c a9 ff f7
+                 8f fd 29 20 17 e0 00 bf b2 ba 20 00 37 bb 20 00
+                 74 ba 20 00 46 ba 20 00 e9 b9 20 00 0c bb 20 00
+                 20 46 0c a9 ff f7 7c fd 2a 20 04 e0 20 46 0c a9
+                 ff f7 76 fd 2b 20 0c a9 18 22 01 f0 a6 f9 00 20
+                 15 b0 f0 bd 00 b5 8d b0 13 20 69 46 ff f7 68 fd
+                 6a 46 18 23 11 20 06 a9 01 f0 a3 f9 13 20 06 a9
+                 ff f7 55 fd 29 20 69 46 ff f7 5a fd 18 20 6a 46
+                 03 46 0d eb 00 01 01 f0 94 f9 29 20 06 a9 ff f7
+                 46 fd 2b 20 69 46 ff f7 4b fd 6a 46 18 23 19 20
+                 06 a9 01 f0 86 f9 2b 20 06 a9 ff f7 38 fd 37 20
+                 69 46 ff f7 3d fd 6a 46 18 23 1a 20 06 a9 01 f0
+                 78 f9 37 20 06 a9 ff f7 2a fd 39 20 69 46 ff f7
+                 2f fd 6a 46 18 23 1b 20 06 a9 01 f0 6a f9 06 a9
+                 39 20 ff f7 1c fd 3b 20 69 46 ff f7 21 fd 6a 46
+                 18 23 1c 20 06 a9 01 f0 5c f9 3b 20 06 a9 ff f7
+                 0e fd 3d 20 69 46 ff f7 13 fd 6a 46 18 23 1d 20
+                 06 a9 01 f0 4e f9 3d 20 06 a9 ff f7 00 fd 3f 20
+                 69 46 ff f7 05 fd 6a 46 18 23 1e 20 06 a9 01 f0
+                 40 f9 3f 20 06 a9 ff f7 f2 fc 41 20 69 46 ff f7
+                 f7 fc 6a 46 18 23 1f 20 06 a9 01 f0 32 f9 41 20
+                 06 a9 ff f7 e4 fc 43 20 69 46 ff f7 e9 fc 6a 46
+                 18 23 06 a9 20 20 01 f0 24 f9 43 20 06 a9 ff f7
+                 d6 fc 4c 20 69 46 ff f7 db fc 6a 46 18 23 21 20
+                 06 a9 01 f0 16 f9 4c 20 06 a9 ff f7 c8 fc 4e 20
+                 69 46 ff f7 cd fc 6a 46 18 23 22 20 06 a9 01 f0
+                 08 f9 4e 20 06 a9 ff f7 ba fc 50 20 69 46 ff f7
+                 bf fc 6a 46 18 23 23 20 06 a9 01 f0 fa f8 50 20
+                 06 a9 ff f7 ac fc 52 20 69 46 ff f7 b1 fc 6a 46
+                 18 23 24 20 06 a9 01 f0 ec f8 52 20 06 a9 ff f7
+                 9e fc 69 46 54 20 ff f7 a3 fc 25 20 6a 46 18 23
+                 06 a9 01 f0 de f8 54 20 06 a9 ff f7 90 fc 56 20
+                 69 46 ff f7 95 fc 6a 46 18 23 26 20 06 a9 01 f0
+                 d0 f8 56 20 06 a9 ff f7 82 fc 58 20 69 46 ff f7
+                 87 fc 6a 46 18 23 27 20 06 a9 01 f0 c2 f8 58 20
+                 06 a9 ff f7 74 fc 5a 20 69 46 ff f7 79 fc 6a 46
+                 18 23 28 20 06 a9 01 f0 b4 f8 5a 20 06 a9 ff f7
+                 66 fc 61 20 69 46 ff f7 6b fc 6a 46 18 23 29 20
+                 06 a9 01 f0 a6 f8 06 a9 61 20 ff f7 58 fc 67 20
+                 69 46 ff f7 5d fc 6a 46 18 23 2a 20 06 a9 01 f0
+                 98 f8 67 20 06 a9 ff f7 4a fc 69 20 69 46 ff f7
+                 4f fc 2b 20 06 a9 6a 46 18 23 01 f0 8a f8 69 20
+                 06 a9 ff f7 3c fc 0d b0 00 bd f0 b5 87 b0 02 23
+                 00 af 9a b0 8d f8 00 30 01 23 8d f8 01 30 04 20
+                 05 23 39 46 8d f8 02 30 be 1c ff f7 31 fc 11 23
+                 3a 78 8d f8 1f 30 31 46 09 23 0d f1 21 00 8d f8
+                 20 30 36 f6 8b fb 07 20 39 46 ff f7 21 fc 3a 78
+                 03 25 53 1c 31 46 10 a8 8d f8 3e 30 8d f8 3f 50
+                 36 f6 7c fb 68 46 29 46 6c 46 06 f6 20 fe 07 f1
+                 1c 07 bd 46 f0 bd 30 b5 84 78 03 78 42 78 05 79
+                 43 ea 02 22 04 f0 03 03 42 ea 03 42 c3 78 40 79
+                 a4 08 8b 70 0a 23 08 70 b4 fb f3 f0 4d 70 b0 fb
+                 f3 f5 05 fb 13 05 03 fb 10 40 30 30 08 71 42 f2
+                 10 70 b2 fb f0 f0 b0 fb f3 f4 03 fb 14 00 30 30
+                 48 71 4f f4 7a 70 b2 fb f0 f0 b0 fb f3 f4 03 fb
+                 14 00 30 30 88 71 64 20 b2 fb f0 f0 b0 fb f3 f4
+                 03 fb 14 00 30 30 c8 71 b2 fb f3 f0 b0 fb f3 f4
+                 03 fb 14 04 03 fb 10 23 30 35 30 34 30 33 cd 70
+                 0c 72 4b 72 30 bd 00 00 00 b5 23 4b 8b b0 18 68
+                 07 f6 f2 f9 ff f7 4e fe fa f5 1e fb 4f f4 80 70
+                 fa f5 40 fb 05 20 1d 49 06 f6 b7 ff 01 20 1c 49
+                 06 f6 b3 ff 02 20 1b 49 06 f6 af ff 03 20 1a 49
+                 06 f6 ab ff 19 48 06 f6 50 fb 01 a9 0d 20 ff f7
+                 9f fb 02 f6 94 fc 07 a9 ff f7 8d ff 0a 22 07 a9
+                 0d f1 06 00 36 f6 fa fa 0d 20 01 a9 ff f7 87 fb
+                 04 20 0d eb 00 01 ff f7 8b fb 07 a9 0a 22 0d f1
+                 0b 00 36 f6 eb fa 04 20 0d eb 00 01 ff f7 77 fb
+                 ff f7 3b ff 0b b0 00 bd 54 08 20 00 f1 8b 20 00
+                 39 8c 20 00 31 8c 20 00 49 8c 20 00 ad 8c 20 00
+                 2d e9 f0 47 5d 78 1c 78 de 78 44 ea 05 24 c4 eb
+                 20 15 64 00 c4 eb e0 00 6d 43 9c 78 93 f8 11 c0
+                 44 ea 06 24 24 b2 44 43 5e 79 28 13 1d 79 93 f8
+                 0f 80 45 ea 06 25 2d b2 45 43 18 7c ad 13 05 eb
+                 e4 24 65 10 40 ea 0c 2c 98 7b a5 f5 7a 45 ae 10
+                 40 ea 08 28 5f 7b 18 7b 76 43 40 ea 07 27 93 f8
+                 0b 90 98 7a 93 f8 09 a0 40 ea 09 29 0f fa 89 f9
+                 70 13 00 fb 09 f9 18 7a 40 ea 0a 20 00 b2 68 43
+                 40 10 00 eb e9 09 93 f8 07 a0 98 79 4f ea a9 49
+                 09 f5 00 49 40 ea 0a 20 00 fb 09 f0 c0 13 00 f0
+                 81 80 0f fa 88 f8 08 fb 05 f5 f6 12 6d 00 0f fa
+                 8c fc 0c fb 06 56 3f 04 49 42 07 eb a6 06 a1 eb
+                 26 31 40 f6 35 45 69 43 01 f1 43 41 11 f5 a0 01
+                 03 d4 49 00 b1 fb f0 f0 02 e0 b1 fb f0 f0 40 00
+                 c1 08 49 43 de 7d 9d 7d 49 0b 45 ea 06 25 2d b2
+                 5f 7d 69 43 1d 7d 86 08 45 ea 07 25 2d b2 75 43
+                 6d 13 de 7c 05 eb 21 31 9d 7c 92 03 45 ea 06 25
+                 2d b2 49 19 05 25 65 43 00 eb 21 10 80 35 08 99
+                 2d 12 0d 80 09 99 08 60 19 7f a4 f5 96 30 5c 7f
+                 41 ea 04 21 09 05 51 1a dc 7f 9a 7f 42 ea 04 24
+                 24 b2 00 fb 14 11 93 f9 20 20 dc 7e 42 43 60 43
+                 c0 12 92 12 00 f5 00 40 50 43 9c 7e 5a 7e 80 12
+                 42 ea 04 22 00 f5 00 10 12 b2 42 43 01 f5 80 41
+                 02 f5 00 52 c9 13 92 13 4a 43 d1 13 49 43 1b 7e
+                 c9 11 59 43 a2 eb 21 12 22 ea e2 72 b2 f1 c8 5f
+                 a8 bf 4f f0 c8 52 64 23 12 13 5a 43 0a 9b 92 0a
+                 1a 80 01 20 bd e8 f0 87 7f b5 72 20 69 46 ff f7
+                 97 fa 9d f8 02 30 ff 2b 02 d0 01 33 8d f8 02 30
+                 72 20 69 46 ff f7 83 fa 0d f1 02 01 9d f8 00 20
+                 72 20 07 f6 43 fc 07 b0 00 bd f0 b5 f7 23 87 b0
+                 8d f8 14 30 ee 23 00 93 06 46 0d 46 14 46 03 a8
+                 08 21 05 aa 01 23 01 f6 56 f9 07 46 f8 b9 9d f8
+                 0c 30 9d f8 0d 20 1b 03 43 ea 02 13 9d f8 0e 20
+                 43 ea 12 13 33 60 9d f8 0f 30 9d f8 10 20 1b 03
+                 43 ea 02 13 9d f8 11 20 43 ea 12 13 2b 60 9d f8
+                 12 20 9d f8 13 30 43 ea 02 23 23 60 01 e0 ff f7
+                 b3 ff 38 46 07 b0 f0 bd 13 b5 f5 23 8d f8 05 00
+                 02 21 01 a8 ee 22 8d f8 04 30 01 f6 e9 f8 04 46
+                 08 b1 ff f7 a1 ff 20 46 1c bd 30 b5 f5 23 85 b0
+                 8d f8 08 30 01 21 ee 23 00 93 04 46 02 aa 03 a8
+                 0b 46 01 f6 10 f9 05 46 18 b9 9d f8 0c 30 23 70
+                 01 e0 ff f7 89 ff 28 46 05 b0 30 bd f7 b5 04 46
+                 0d f1 07 00 0d 46 16 46 ff f7 df ff 07 46 30 bb
+                 44 b1 9d f8 07 30 22 78 03 f0 1f 03 43 ea 42 13
+                 8d f8 07 30 55 b1 9d f8 07 30 2a 78 23 f0 1c 03
+                 02 f0 07 02 43 ea 82 03 8d f8 07 30 4e b1 9d f8
+                 07 30 32 78 23 f0 01 03 02 f0 01 02 13 43 8d f8
+                 07 30 9d f8 07 00 ff f7 a7 ff 07 46 08 b1 ff f7
+                 53 ff 38 46 fe bd 13 b5 f4 23 8d f8 05 00 02 21
+                 01 a8 ee 22 8d f8 04 30 01 f6 8a f8 04 46 08 b1
+                 ff f7 42 ff 20 46 1c bd 30 b5 f4 23 85 b0 8d f8
+                 08 30 01 21 ee 23 00 93 04 46 02 aa 03 a8 0b 46
+                 01 f6 b1 f8 05 46 18 b9 9d f8 0c 30 23 70 01 e0
+                 ff f7 2a ff 28 46 05 b0 30 bd f7 b5 04 46 0d f1
+                 07 00 0d 46 16 46 ff f7 df ff 07 46 30 bb 44 b1
+                 9d f8 07 30 22 78 03 f0 1f 03 43 ea 42 13 8d f8
+                 07 30 55 b1 9d f8 07 30 2a 78 23 f0 1c 03 02 f0
+                 07 02 43 ea 82 03 8d f8 07 30 4e b1 9d f8 07 30
+                 32 78 23 f0 03 03 02 f0 03 02 13 43 8d f8 07 30
+                 9d f8 07 00 ff f7 a7 ff 07 46 08 b1 ff f7 f4 fe
+                 38 46 fe bd 13 b5 f2 23 8d f8 05 00 02 21 01 a8
+                 ee 22 8d f8 04 30 01 f6 2b f8 04 46 08 b1 ff f7
+                 e3 fe 20 46 1c bd 30 b5 f2 23 85 b0 8d f8 08 30
+                 01 21 ee 23 00 93 04 46 02 aa 03 a8 0b 46 01 f6
+                 52 f8 05 46 18 b9 9d f8 0c 30 23 70 01 e0 ff f7
+                 cb fe 28 46 05 b0 30 bd 37 b5 04 46 0d f1 07 00
+                 ff f7 e1 ff 05 46 80 b9 4c b1 9d f8 07 30 22 78
+                 23 f0 07 03 02 f0 07 02 13 43 8d f8 07 30 9d f8
+                 07 00 ff f7 bf ff 05 46 08 b1 ff f7 ad fe 28 46
+                 3e bd 00 b5 00 23 89 b0 8d f8 19 30 52 20 03 23
+                 69 46 8d f8 1a 30 ff f7 3b f9 9d f8 02 30 54 20
+                 03 f0 07 03 69 46 8d f8 1b 30 ff f7 31 f9 9d f8
+                 02 30 56 20 03 f0 07 03 69 46 8d f8 1c 30 ff f7
+                 27 f9 9d f8 02 30 58 20 03 f0 07 03 69 46 8d f8
+                 1d 30 ff f7 1d f9 9d f8 02 30 07 a9 03 f0 07 03
+                 0d f1 19 02 0d f1 1b 00 8d f8 1e 30 ff f7 ee fe
+                 0d f1 1e 01 0d f1 1a 02 0d f1 1d 00 ff f7 45 ff
+                 5a 20 69 46 ff f7 04 f9 9d f8 02 30 08 a8 03 f0
+                 07 03 00 f8 01 3d ff f7 97 ff 09 b0 00 bd 13 b5
+                 e0 23 8d f8 04 30 01 a8 b6 23 02 21 ee 22 8d f8
+                 05 30 00 f6 95 ff 04 46 08 b1 ff f7 4d fe 20 46
+                 1c bd ff f7 ec bf 70 b5 88 23 8a b0 8d f8 24 30
+                 04 46 ee 25 02 a8 1a 21 09 aa 01 23 00 95 00 f6
+                 ba ff 06 46 88 bb 02 a9 18 22 20 46 36 f6 36 f8
+                 9d f8 21 30 02 a8 23 76 e1 23 8d f8 24 30 07 21
+                 09 aa 01 23 00 95 00 f6 a6 ff 06 46 e8 b9 02 a9
+                 03 22 04 f1 19 00 36 f6 21 f8 9d f8 0c 20 9d f8
+                 0b 10 02 f0 0f 03 43 ea 01 13 23 77 1b 0a 63 77
+                 9d f8 0d 30 12 09 42 ea 03 13 a3 77 1b 0a e3 77
+                 9d f8 0e 30 84 f8 20 30 01 e0 ff f7 05 fe 30 46
+                 0a b0 70 bd 01 21 08 b5 0a 46 10 48 fe f5 58 fe
+                 40 f2 ff 32 4f f4 40 73 01 21 02 20 00 f6 67 fd
+                 02 20 00 21 00 f6 91 fd 00 20 20 22 03 46 0e 21
+                 fe f5 dc ff 06 4a 00 23 13 70 06 4a 13 80 06 4a
+                 13 70 06 4b 01 22 1a 70 08 bd 00 bf 00 36 6e 01
+                 a7 ba 20 00 1a ba 20 00 36 bb 20 00 a6 ba 20 00
+                 03 4b 01 22 18 70 03 4b 19 80 03 4b 1a 70 70 47
+                 a7 ba 20 00 1a ba 20 00 36 bb 20 00 01 4b 18 78
+                 70 47 00 bf 36 bb 20 00 04 4b 1b 78 2b b1 c0 f5
+                 7e 71 07 31 02 20 00 f6 f5 bc 70 47 a6 ba 20 00
+                 70 b5 2d 4c 86 b0 25 88 0d b3 01 20 00 f0 cf f8
+                 2a 4b 18 78 c0 43 c0 b2 ff f7 e6 ff 30 20 69 46
+                 ff f7 3e f8 23 88 30 20 8d f8 02 30 69 46 1b 0a
+                 8d f8 03 30 ff f7 2b f8 0d f1 02 01 9d f8 00 20
+                 30 20 07 f6 eb f9 23 88 01 3b 23 80 31 e0 1c 4e
+                 33 78 43 b3 19 4b 30 20 1d 70 69 46 ff f7 20 f8
+                 23 88 30 20 8d f8 02 30 69 46 1b 0a 0d f1 02 04
+                 8d f8 03 30 ff f7 0b f8 9d f8 00 20 30 20 21 46
+                 07 f6 cc f9 2e 20 69 46 ff f7 0a f8 2e 20 69 46
+                 8d f8 02 50 fe f7 fb ff 9d f8 00 20 2e 20 21 46
+                 07 f6 bc f9 35 70 00 20 00 f0 81 f8 00 20 ff f7
+                 9b ff 06 b0 70 bd 00 bf 1a ba 20 00 a7 ba 20 00
+                 36 bb 20 00 10 b5 00 20 ff f7 8e ff 07 4b 00 24
+                 1c 70 20 46 0e 21 4f f4 80 42 23 46 fe f5 36 ff
+                 20 46 bd e8 10 40 00 f0 62 b8 00 bf a6 ba 20 00
+                 00 20 0d 21 ff f5 41 b8 01 20 08 21 ff f5 3d b8
+                 00 20 03 21 ff f5 39 b8 73 b5 21 4b 00 24 1c 70
+                 20 4b 08 26 18 68 06 f6 0a ff 0d eb 06 05 23 46
+                 20 46 03 21 0d 22 ad f8 02 40 ad f8 04 40 25 f8
+                 08 6d fe f5 0b ff 68 46 22 46 17 49 fe f5 87 ff
+                 01 20 4f f4 80 73 ad f8 02 30 31 46 03 46 0d 22
+                 ad f8 00 40 ad f8 04 40 fe f5 f8 fe 68 46 22 46
+                 0e 49 fe f5 74 ff 0d 21 4f f4 00 53 ad f8 00 30
+                 20 46 0a 46 23 46 ad f8 02 40 ad f8 04 40 fe f5
+                 e5 fe 68 46 06 49 22 46 fe f5 61 ff 7c bd 00 bf
+                 70 ba 20 00 5c 08 20 00 f9 9c 20 00 f1 9c 20 00
+                 e9 9c 20 00 02 46 02 21 00 20 fe f5 ba be 02 46
+                 0f 21 00 20 fe f5 b5 be 00 20 03 21 fe f5 cb bf
+                 01 20 08 21 fe f5 c7 bf 00 20 0d 21 fe f5 c3 bf
+                 10 b5 07 4c 23 78 5b 08 23 70 ff f7 ed ff 23 78
+                 10 b9 03 f0 7f 03 01 e0 63 f0 7f 03 23 70 10 bd
+                 70 ba 20 00 08 b5 00 f6 e5 fd 3c 20 bd e8 08 40
+                 00 f6 e7 bd 2d e9 f7 4f 75 4c 76 4d 4f f0 02 08
+                 ff 26 4f f0 0a 0a 84 f8 00 80 84 f8 01 80 04 eb
+                 08 00 28 21 00 22 35 f6 e7 fe a6 70 85 f8 00 80
+                 85 f8 01 a0 05 eb 08 00 28 21 00 22 35 f6 dc fe
+                 74 23 6b 71 4f 21 6f f0 4b 03 00 24 28 27 29 71
+                 eb 71 4f f0 ce 0c e3 23 4f f0 fc 09 4f f0 f3 0b
+                 6f f0 69 01 a9 71 85 f8 08 c0 6b 72 85 f8 0b 90
+                 ac 70 ef 70 85 f8 0a b0 5b 4d 39 46 85 f8 00 80
+                 85 f8 01 a0 05 eb 08 00 22 46 8d e8 08 10 35 f6
+                 b3 fe 7f 22 aa 70 ea 70 2a 71 6a 71 aa 71 53 4a
+                 14 21 d1 70 3c 21 51 71 4f 21 91 71 62 21 d1 71
+                 74 21 11 72 6f f0 7a 01 51 72 6f f0 69 01 91 72
+                 6f f0 59 01 d1 72 6f f0 4b 01 11 73 6f f0 3d 01
+                 51 73 ee 71 2e 72 6e 72 ae 72 ee 72 57 70 94 70
+                 17 71 dd f8 04 c0 d9 21 82 f8 0e c0 d1 73 00 9b
+                 4f f0 fe 0e ec 20 f8 25 13 74 50 74 d5 74 82 f8
+                 14 90 82 f8 00 80 82 f8 12 b0 82 f8 15 e0 13 77
+                 51 77 6f f0 3d 03 6f f0 4b 01 d3 77 82 f8 20 10
+                 6f f0 59 03 6f f0 69 01 82 f8 21 30 82 f8 22 10
+                 6f f0 7a 03 74 21 d0 76 82 f8 23 30 82 f8 24 10
+                 2b 48 62 23 4f 21 82 f8 18 90 55 76 df f8 bc 90
+                 01 25 82 f8 25 30 82 f8 26 10 3c 23 14 21 82 f8
+                 17 e0 82 f8 1e c0 82 f8 27 30 82 f8 29 10 96 75
+                 82 f8 1a b0 82 f8 28 70 05 70 45 70 39 46 32 46
+                 40 44 35 f6 39 fe 39 46 22 46 89 f8 00 80 89 f8
+                 01 a0 09 eb 08 00 35 f6 2f fe 40 f2 ff 32 4f f4
+                 40 73 21 46 89 f8 02 60 20 46 00 f6 50 fb 20 46
+                 21 46 00 f6 7a fb 2b 46 28 46 51 46 4f f4 80 42
+                 fe f5 c4 fd 0b 4b 1c 70 0b 4b 1d 70 0b 4b 1d 70
+                 0b 4b 1c 70 0b 4b 1c 70 0b 4b 1d 70 bd e8 fe 8f
+                 e9 b9 20 00 37 bb 20 00 74 ba 20 00 0c bb 20 00
+                 b2 ba 20 00 9e ba 20 00 a5 ba 20 00 b1 ba 20 00
+                 1c ba 20 00 a4 ba 20 00 aa ba 20 00 46 ba 20 00
+                 08 b5 08 4b 18 70 08 4b 08 48 19 70 11 46 28 22
+                 35 f6 a4 fd 06 4b 00 22 1a 70 06 4b 01 22 1a 70
+                 08 bd 00 bf a5 ba 20 00 b1 ba 20 00 1c ba 20 00
+                 9e ba 20 00 a4 ba 20 00 04 4b 1b 78 2b b1 c0 f5
+                 7e 71 07 31 00 20 00 f6 c5 ba 70 47 aa ba 20 00
+                 30 b5 20 4b 87 b0 1b 78 01 2b 02 d0 02 2b 37 d1
+                 11 e0 1d 4c 1d 4a 23 78 12 78 9a 42 07 d9 1c 4a
+                 d0 5c ff f7 e1 ff 23 78 01 33 23 70 28 e0 19 4c
+                 23 78 2b b3 10 e0 14 4c 14 4d 23 78 2a 78 9a 42
+                 1e d9 13 4a d0 5c ff f7 cf ff 23 78 2a 78 01 33
+                 db b2 9a 42 23 70 13 d8 16 20 69 46 fe f7 f0 fd
+                 00 25 16 20 69 46 8d f8 02 50 fe f7 e0 fd 0d eb
+                 05 03 99 1c 9d f8 00 20 16 20 06 f6 9f ff 25 70
+                 07 b0 30 bd a5 ba 20 00 9e ba 20 00 b1 ba 20 00
+                 1c ba 20 00 a4 ba 20 00 00 20 10 b5 ff f7 a4 ff
+                 05 4b 00 22 01 20 1a 70 0a 21 4f f4 80 42 03 46
+                 bd e8 10 40 fe f5 1a bd aa ba 20 00 7f b5 70 20
+                 69 46 fe f7 bd fd 9d f8 02 30 ff 2b 02 d0 01 33
+                 8d f8 02 30 70 20 69 46 fe f7 a9 fd 0d f1 02 01
+                 9d f8 00 20 70 20 06 f6 69 ff 07 b0 00 bd 13 b5
+                 12 23 8d f8 05 00 02 21 01 a8 90 22 8d f8 04 30
+                 00 f6 46 fc 04 46 08 b1 ff f7 d8 ff 20 46 1c bd
+                 30 b5 12 23 85 b0 8d f8 08 30 01 21 90 23 00 93
+                 04 46 02 aa 03 a8 0b 46 00 f6 6d fc 05 46 18 b9
+                 9d f8 0c 30 23 70 01 e0 ff f7 c0 ff 28 46 05 b0
+                 30 bd 73 b5 04 46 0d f1 07 00 0d 46 ff f7 e0 ff
+                 06 46 d0 b9 44 b1 9d f8 07 30 22 78 03 f0 7f 03
+                 43 ea c2 13 8d f8 07 30 4d b1 9d f8 07 30 2a 78
+                 23 f0 07 03 02 f0 07 02 13 43 8d f8 07 30 9d f8
+                 07 00 ff f7 b4 ff 06 46 08 b1 ff f7 97 ff 30 46
+                 7c bd 13 b5 11 23 8d f8 05 00 02 21 01 a8 90 22
+                 8d f8 04 30 00 f6 f4 fb 04 46 08 b1 ff f7 86 ff
+                 20 46 1c bd 30 b5 11 23 85 b0 8d f8 08 30 01 21
+                 90 23 00 93 04 46 02 aa 03 a8 0b 46 00 f6 1b fc
+                 05 46 18 b9 9d f8 0c 30 23 70 01 e0 ff f7 6e ff
+                 28 46 05 b0 30 bd 2d e9 f3 41 04 46 0d f1 07 00
+                 0d 46 16 46 1f 46 ff f7 dd ff 80 46 90 bb 44 b1
+                 9d f8 07 30 22 78 03 f0 7f 03 43 ea c2 13 8d f8
+                 07 30 55 b1 9d f8 07 30 2a 78 23 f0 60 03 02 f0
+                 03 02 43 ea 42 13 8d f8 07 30 56 b1 9d f8 07 30
+                 32 78 23 f0 10 03 02 f0 01 02 43 ea 02 13 8d f8
+                 07 30 4f b1 9d f8 07 30 3a 78 23 f0 0f 03 02 f0
+                 0f 02 13 43 8d f8 07 30 9d f8 07 00 ff f7 99 ff
+                 80 46 08 b1 ff f7 2a ff 40 46 bd e8 fc 81 13 b5
+                 10 23 8d f8 05 00 02 21 01 a8 90 22 8d f8 04 30
+                 00 f6 86 fb 04 46 08 b1 ff f7 18 ff 20 46 1c bd
+                 30 b5 10 23 85 b0 8d f8 08 30 01 21 90 23 00 93
+                 04 46 02 aa 03 a8 0b 46 00 f6 ad fb 05 46 18 b9
+                 9d f8 0c 30 23 70 01 e0 ff f7 00 ff 28 46 05 b0
+                 30 bd 73 b5 04 46 0d f1 07 00 0d 46 ff f7 e0 ff
+                 06 46 e0 b9 54 b1 9d f8 07 30 22 78 23 f0 1c 03
+                 02 f0 07 02 43 ea 82 03 8d f8 07 30 4d b1 9d f8
+                 07 30 2a 78 23 f0 03 03 02 f0 03 02 13 43 8d f8
+                 07 30 9d f8 07 00 ff f7 b2 ff 06 46 08 b1 ff f7
+                 d5 fe 30 46 7c bd 13 b5 01 23 8d f8 05 00 02 21
+                 01 a8 90 22 8d f8 04 30 00 f6 32 fb 04 46 08 b1
+                 ff f7 c4 fe 20 46 1c bd 10 b5 03 23 88 b0 00 24
+                 8d f8 19 30 41 20 01 23 69 46 8d f8 1a 30 8d f8
+                 18 40 fe f7 75 fc 9d f8 02 30 3f 20 03 f0 07 03
+                 69 46 8d f8 1b 30 fe f7 6b fc 9d f8 02 30 3d 20
+                 c3 f3 00 12 69 46 03 f0 0f 03 8d f8 1c 20 8d f8
+                 1d 30 fe f7 5d fc 9d f8 02 30 69 46 03 f0 03 03
+                 43 20 8d f8 1e 30 fe f7 53 fc 9d f8 02 30 20 46
+                 03 f0 03 03 8d f8 1f 30 ff f7 b5 ff 0d f1 1f 01
+                 0d f1 1b 00 ff f7 85 ff 0d f1 1e 01 0d f1 1a 00
+                 07 aa 0d f1 1d 03 ff f7 0e ff 06 a8 0d f1 19 01
+                 ff f7 b7 fe 08 b0 10 bd 10 b5 07 23 88 b0 00 24
+                 8d f8 19 30 41 20 01 23 69 46 8d f8 1a 30 8d f8
+                 18 40 fe f7 25 fc 9d f8 02 30 3f 20 03 f0 07 03
+                 69 46 8d f8 1b 30 fe f7 1b fc 9d f8 02 30 3d 20
+                 c3 f3 00 12 69 46 03 f0 0f 03 8d f8 1c 20 8d f8
+                 1d 30 fe f7 0d fc 9d f8 02 30 69 46 03 f0 03 03
+                 43 20 8d f8 1e 30 fe f7 03 fc 9d f8 02 30 20 46
+                 03 f0 03 03 8d f8 1f 30 ff f7 65 ff 0d f1 1f 01
+                 0d f1 1b 00 ff f7 35 ff 0d f1 1e 01 0d f1 1a 00
+                 07 aa 0d f1 1d 03 ff f7 be fe 06 a8 0d f1 19 01
+                 ff f7 67 fe 08 b0 10 bd 7f b5 6c 20 69 46 fe f7
+                 df fb 9d f8 02 30 ff 2b 02 d0 01 33 8d f8 02 30
+                 6c 20 69 46 fe f7 cb fb 0d f1 02 01 9d f8 00 20
+                 6c 20 06 f6 8b fd 07 b0 00 bd 08 b5 0b 46 11 46
+                 1a 46 06 f6 fc fc 18 b9 bd e8 08 40 ff f7 dc bf
+                 08 bd f8 b5 0d 46 14 46 19 46 2a 46 06 46 1f 46
+                 06 f6 eb fc 70 b9 30 46 39 46 22 46 06 f6 e7 fc
+                 08 b9 ff f7 c9 ff 28 46 21 46 3a 46 bd e8 f8 40
+                 35 f6 0c bb f8 bd 00 00 21 4b 10 b5 1a 68 21 4b
+                 88 b0 1b 68 9a 42 04 bf 1f 4b 18 88 34 d0 1f 4c
+                 23 78 2b b9 1e 48 ff f7 ae fa 08 b9 01 23 23 70
+                 23 78 eb b1 05 a8 06 a9 07 aa ff f7 06 f9 b8 b9
+                 18 4b 15 4c 01 93 18 4b 06 98 02 93 05 99 07 9a
+                 13 4b 00 94 ff f7 0c f8 01 28 09 d1 0d 4b 0c 4a
+                 1b 68 20 88 13 60 11 4a 13 60 11 4a 13 60 0b e0
+                 09 4b 4f f0 ff 32 1a 80 0a 4a 4f f0 ff 33 13 60
+                 09 4a 4f f6 ff 70 13 80 00 b2 08 b0 10 bd 00 bf
+                 14 ba 20 00 ac ba 20 00 44 ba 20 00 b0 ba 20 00
+                 e4 ba 20 00 dc ba 20 00 72 ba 20 00 08 bb 20 00
+                 64 bb 20 00 1f 4b 10 b5 1a 68 1f 4b 88 b0 1b 68
+                 9a 42 04 bf 1d 4b 18 68 32 d0 1d 4c 23 78 2b b9
+                 1c 48 ff f7 58 fa 08 b9 01 23 23 70 23 78 eb b1
+                 05 a8 06 a9 07 aa ff f7 b0 f8 b8 b9 16 4b 13 4c
+                 00 93 16 4b 06 98 02 93 05 99 07 9a 11 4b 01 94
+                 fe f7 b6 ff 01 28 09 d1 0b 4b 11 4a 1b 68 20 68
+                 13 60 08 4a 13 60 0f 4a 13 60 09 e0 0a 4b 4f f0
+                 ff 32 1a 80 05 4b 4f f0 ff 30 18 60 07 4b 18 80
+                 08 b0 10 bd 08 bb 20 00 ac ba 20 00 dc ba 20 00
+                 b0 ba 20 00 e4 ba 20 00 44 ba 20 00 72 ba 20 00
+                 14 ba 20 00 64 bb 20 00 20 4b 10 b5 1a 68 20 4b
+                 88 b0 1b 68 9a 42 04 bf 1e 4b 18 88 34 d0 1e 4c
+                 23 78 2b b9 1d 48 ff f7 06 fa 08 b9 01 23 23 70
+                 23 78 eb b1 05 a8 06 a9 07 aa ff f7 5e f8 b8 b9
+                 17 4b 14 4c 00 93 17 4b 06 98 01 93 05 99 07 9a
+                 12 4b 02 94 fe f7 64 ff 01 28 09 d1 0c 4b 12 4a
+                 1b 68 20 88 13 60 11 4a 13 60 08 4a 13 60 0b e0
+                 0b 4b 4f f0 ff 32 1a 80 0a 4a 4f f0 ff 33 13 60
+                 04 4a 4f f6 ff 70 13 80 08 b0 10 bd 64 bb 20 00
+                 ac ba 20 00 72 ba 20 00 b0 ba 20 00 e4 ba 20 00
+                 44 ba 20 00 dc ba 20 00 14 ba 20 00 08 bb 20 00
+                 ff f7 5f b9 ff f7 bd b9 07 b5 00 f0 07 03 00 21
+                 02 a8 00 f8 01 3d 0a 46 ff f7 78 f8 0e bd 07 b5
+                 00 f0 07 00 02 a9 01 f8 01 0d 00 20 02 46 ff f7
+                 6d f8 0e bd 07 b5 00 f0 07 03 00 21 02 a8 00 f8
+                 01 3d 0a 46 ff f7 c1 f8 0e bd 07 b5 00 f0 07 00
+                 02 a9 01 f8 01 0d 00 20 02 46 ff f7 b6 f8 0e bd
+                 07 b5 00 f0 07 03 02 a8 00 f8 01 3d ff f7 0c f9
+                 0e bd 70 47 07 4a 08 b5 00 23 13 70 06 4a 07 48
+                 13 70 07 4a 07 49 13 60 07 f6 d4 f8 bd e8 08 40
+                 05 f6 be bd e8 b9 20 00 68 bb 20 00 89 ac 20 00
+                 ac ba 20 00 bb a7 20 00 08 b5 fe f7 fd f9 00 20
+                 bd e8 08 40 00 f0 36 bb f0 b5 87 b0 fe f7 36 f9
+                 fe f7 4c f9 04 46 fe f7 37 f9 fe f7 49 f9 69 46
+                 05 46 33 20 fe f7 3c fa 8d f8 02 40 24 0a 8d f8
+                 03 40 33 20 0d f1 02 04 69 46 fe f7 28 fa 9d f8
+                 00 20 33 20 21 46 06 f6 e9 fb 35 20 69 46 fe f7
+                 27 fa 8d f8 02 50 35 20 2d 12 69 46 8d f8 03 50
+                 fe f7 15 fa 9d f8 00 20 21 46 35 20 06 f6 d6 fb
+                 ff f7 72 fe 07 46 ff f7 c5 fe 05 46 ff f7 14 ff
+                 69 46 06 46 46 20 fe f7 0b fa 8d f8 02 70 46 20
+                 3f 12 69 46 8d f8 03 70 fe f7 f9 f9 9d f8 00 20
+                 46 20 21 46 06 f6 ba fb 69 46 48 20 fe f7 f8 f9
+                 2b 0a 8d f8 02 50 8d f8 03 30 69 46 2b 0c 2d 0e
+                 48 20 8d f8 04 30 8d f8 05 50 fe f7 e0 f9 9d f8
+                 00 20 48 20 21 46 06 f6 a1 fb 4a 20 69 46 fe f7
+                 df f9 8d f8 02 60 4a 20 36 0a 69 46 8d f8 03 60
+                 fe f7 cd f9 9d f8 00 20 21 46 4a 20 06 f6 8e fb
+                 fe f7 c8 f8 fe f7 e2 f8 06 46 fe f7 c9 f8 fe f7
+                 e7 f8 69 46 05 46 5d 20 fe f7 c2 f9 8d f8 02 60
+                 5d 20 69 46 36 0a 8d f8 03 60 fe f7 b0 f9 9d f8
+                 00 20 5d 20 21 46 06 f6 71 fb 5f 20 69 46 fe f7
+                 af f9 8d f8 02 50 5f 20 69 46 2d 12 8d f8 03 50
+                 fe f7 9d f9 9d f8 00 20 5f 20 21 46 06 f6 5e fb
+                 07 b0 f0 bd 03 4b 1a 78 8a 42 9e bf 02 4a 19 70
+                 10 70 70 47 68 bb 20 00 e8 b9 20 00 07 4b 1a 78
+                 5a b1 00 22 1a 70 06 4b 18 78 04 28 03 d1 05 4b
+                 1b 78 05 2b 01 d1 00 f0 6d ba 70 47 68 bb 20 00
+                 e8 b9 20 00 18 ba 20 00 7f b5 29 20 69 46 fe f7
+                 77 f9 9d f8 03 00 9d f8 02 30 53 ea 00 20 08 d0
+                 05 4b 1a 68 05 4b 1b 68 d3 1a 83 42 34 bf 00 20
+                 01 20 07 b0 00 bd 00 bf ac ba 20 00 e0 ba 20 00
+                 7f b5 2b 20 69 46 fe f7 5b f9 9d f8 03 00 9d f8
+                 02 30 53 ea 00 20 08 d0 05 4b 1a 68 05 4b 1b 68
+                 d3 1a 83 42 34 bf 00 20 01 20 07 b0 00 bd 00 bf
+                 ac ba 20 00 a0 ba 20 00 30 b5 87 b0 67 20 69 46
+                 fe f7 3e f9 9d f8 02 30 9d f8 03 40 69 20 69 46
+                 43 ea 04 24 fe f7 34 f9 9d f8 02 30 9d f8 03 50
+                 43 ea 05 25 fe f7 26 f8 fe f7 40 f8 0c 4b 00 22
+                 a0 42 3c bf 1a 88 01 32 1a 80 1b 88 00 20 ab 42
+                 0b d3 27 20 69 46 fe f7 1b f9 27 20 0d f1 02 01
+                 9d f8 00 20 06 f6 d2 fa 01 20 07 b0 30 bd 00 bf
+                 a8 ba 20 00 7f b5 ff f7 a3 f9 0d 4b 18 78 00 f0
+                 c0 00 40 28 05 d0 a0 f1 80 03 58 42 40 eb 03 00
+                 0b e0 25 20 69 46 fe f7 fb f8 25 20 0d f1 02 01
+                 9d f8 00 20 06 f6 b2 fa 02 20 07 b0 00 bd 00 bf
+                 70 ba 20 00 10 b5 ff f7 7b f9 04 46 ff f7 7c f9
+                 20 b9 00 2c 14 bf 02 20 01 20 10 bd 00 20 10 bd
+                 08 b5 ff f7 bd fa ff f7 8b f8 ff f7 eb ff 01 28
+                 02 d0 02 28 07 d1 01 e0 02 20 00 e0 03 20 bd e8
+                 08 40 00 f0 b7 b9 ff f7 87 ff 01 28 01 d1 00 20
+                 f5 e7 ff f7 b7 ff 02 28 01 d1 04 20 ef e7 ff f7
+                 5d f8 00 28 eb d0 bd e8 08 40 ff f7 27 bf 08 b5
+                 ff f7 96 fa ff f7 64 f8 ff f7 66 fe ff f7 c2 ff
+                 01 28 02 d0 02 28 0d d1 04 e0 16 20 01 f6 d6 f8
+                 02 20 03 e0 16 20 01 f6 d1 f8 03 20 bd e8 08 40
+                 00 f0 88 b9 ff f7 58 ff 01 28 04 d1 16 20 01 f6
+                 c5 f8 00 20 f2 e7 ff f7 85 ff 02 28 06 d1 16 20
+                 01 f6 bc f8 bd e8 08 40 00 f0 b2 b9 bd e8 08 40
+                 ff f7 f4 be 08 b5 ff f7 63 fa ff f7 31 f8 ff f7
+                 91 ff 01 28 02 d0 02 28 07 d1 01 e0 02 20 00 e0
+                 03 20 bd e8 08 40 00 f0 5d b9 ff f7 2d ff 01 28
+                 01 d1 00 20 f5 e7 ff f7 5d ff 02 28 03 d0 ff f7
+                 07 ff 01 28 03 d1 bd e8 08 40 00 f0 89 b9 bd e8
+                 08 40 ff f7 cb be 08 b5 ff f7 3a fa ff f7 08 f8
+                 ff f7 68 ff 10 b1 01 28 09 d1 03 e0 bd e8 08 40
+                 00 f0 76 b9 02 20 bd e8 08 40 00 f0 33 b9 bd e8
+                 08 40 ff f7 b3 be 08 b5 ff f7 22 fa fe f7 f0 ff
+                 ff f7 50 ff 10 b1 02 28 09 d1 03 e0 bd e8 08 40
+                 00 f0 5e b9 03 20 bd e8 08 40 00 f0 1b b9 bd e8
+                 08 40 ff f7 9b be 08 b5 ff f7 0a fa fe f7 d8 ff
+                 ff f7 e2 fe 01 28 01 d1 00 20 0c e0 ff f7 a4 fe
+                 01 28 10 d1 ff f7 2e ff 01 28 08 d0 02 d3 02 28
+                 09 d1 06 e0 04 20 bd e8 08 40 00 f0 fb b8 02 20
+                 f9 e7 03 20 f7 e7 bd e8 08 40 ff f7 77 be 00 00
+                 0d 4b 1a 68 01 32 1a 60 0c 4b 1b 78 06 2b 11 d8
+                 df e8 03 f0 10 04 06 08 0a 0c 0e 00 ff f7 cb bf
+                 ff f7 b1 bf ff f7 97 bf ff f7 6c bf ff f7 37 bf
+                 ff f7 0e bf ff f7 98 bd ac ba 20 00 18 ba 20 00
+                 08 b5 ff f7 11 fa fe f7 f5 ff ff f7 5d fb ff f7
+                 39 fd 00 20 bd e8 08 40 ff f7 5c b8 00 b5 0f 4b
+                 8d b0 1a 68 0e 4b 17 20 1a 60 01 a9 2a 23 0d 4a
+                 ff f7 0f fc 9d f8 05 10 0d f1 06 02 9d f8 04 00
+                 ff f7 7e f9 01 20 ff f7 45 f8 ff f7 8d fb ff f7
+                 17 fd fd f7 97 ff 0d b0 00 bd 00 bf ac ba 20 00
+                 e0 ba 20 00 e9 b9 20 00 00 b5 8d b0 2a 23 14 20
+                 01 a9 0b 4a ff f7 ed fb 9d f8 05 10 0d f1 06 02
+                 9d f8 04 00 ff f7 5c f9 01 20 ff f7 23 f8 ff f7
+                 6b fb ff f7 f5 fc fd f7 75 ff 0d b0 00 bd 00 bf
+                 37 bb 20 00 00 b5 8d b0 2a 23 15 20 01 a9 0b 4a
+                 ff f7 cf fb 9d f8 05 10 0d f1 06 02 9d f8 04 00
+                 ff f7 3e f9 01 20 ff f7 05 f8 ff f7 4d fb ff f7
+                 d7 fc fd f7 57 ff 0d b0 00 bd 00 bf 74 ba 20 00
+                 00 b5 0f 4b 8d b0 1a 68 0e 4b 13 20 1a 60 01 a9
+                 2a 23 0d 4a ff f7 ad fb 9d f8 05 10 0d f1 06 02
+                 9d f8 04 00 ff f7 1c f9 01 20 fe f7 e3 ff ff f7
+                 2b fb ff f7 b5 fc fd f7 2f ff 0d b0 00 bd 00 bf
+                 ac ba 20 00 a0 ba 20 00 0c bb 20 00 00 b5 8d b0
+                 2a 23 12 20 01 a9 0b 4a ff f7 8b fb 9d f8 05 10
+                 0d f1 06 02 9d f8 04 00 ff f7 fa f8 01 20 fe f7
+                 c1 ff ff f7 09 fb ff f7 93 fc fd f7 13 ff 0d b0
+                 00 bd 00 bf b2 ba 20 00 00 b5 8d b0 2a 23 16 20
+                 01 a9 0b 4a ff f7 6d fb 9d f8 05 10 0d f1 06 02
+                 9d f8 04 00 ff f7 dc f8 01 20 fe f7 a3 ff ff f7
+                 eb fa ff f7 75 fc fd f7 f5 fe 0d b0 00 bd 00 bf
+                 46 ba 20 00 38 b5 04 46 12 4d 06 28 1c d8 df e8
+                 00 f0 04 09 0c 0f 12 15 18 00 00 23 2b 70 ff f7
+                 1f ff 14 e0 ff f7 2a ff 11 e0 ff f7 4d ff 0e e0
+                 ff f7 68 ff 0b e0 ff f7 83 ff 08 e0 ff f7 a6 ff
+                 05 e0 ff f7 c1 ff 02 e0 ff f7 0a ff 00 24 2c 70
+                 38 bd 00 bf 18 ba 20 00 08 b5 fe f7 25 fb fe f7
+                 1b ff fd f7 c1 fd fe f7 8d ff fe f7 93 ff fe f7
+                 41 fe 01 20 ff f7 c6 ff bd e8 08 40 ff f7 6a bc
+                 08 b5 fe f7 73 fe 00 b1 06 20 bd e8 08 40 ff f7
+                 b9 bf
+          } END_COMMENTED_BYTES
+}
+# SPAR: end of .text
+# SPAR: .rodata from ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf
+ENTRY "Data" = ".rodata from ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf"
+{
+    "Address" = 0x0020aefc
+    "Data" =
+      COMMENTED_BYTES
+          {
+            <hex>
+                 01 00 02 04 00 28 01 18 02 00 02 04 00 28 00 18
+                 03 00 02 07 03 28 02 04 00 00 2a 04 00 02 12 00
+                 2a 4d 69 6e 74 20 00 00 00 00 00 00 00 00 00 00
+                 00 05 00 02 07 03 28 02 06 00 01 2a 06 00 02 04
+                 01 2a 00 02 07 00 02 04 00 28 0a 18 08 00 02 07
+                 03 28 02 09 00 29 2a 09 00 02 0f 29 2a 42 72 65
+                 61 74 68 6f 6d 65 74 65 72 00 0a 00 02 07 03 28
+                 02 0b 00 24 2a 0b 00 02 07 24 2a 4d 69 6e 74 00
+                 0c 00 02 07 03 28 02 0d 00 25 2a 0d 00 02 0c 25
+                 2a 00 00 00 00 00 00 00 00 00 00 0e 00 02 07 03
+                 28 02 0f 00 27 2a 0f 00 02 0d 27 2a 30 33 50 4e
+                 30 30 30 31 2e 36 00 10 00 02 07 03 28 02 11 00
+                 26 2a 11 00 02 0d 26 2a 30 33 46 57 30 30 30 31
+                 2e 33 00 12 00 02 07 03 28 0a 13 00 28 2a 13 00
+                 0e 0d 0b 28 2a 00 00 00 00 00 00 00 00 00 00 00
+                 14 00 02 12 00 28 c0 7c a7 02 51 85 42 8b a7 48
+                 95 6c 69 c8 45 7c 15 00 02 15 03 28 12 16 00 f4
+                 97 ab 2c 92 d9 4b 61 b9 29 b5 44 07 d9 4f aa 16
+                 00 82 11 f4 97 ab 2c 92 d9 4b 61 b9 29 b5 44 07
+                 d9 4f aa 00 17 00 02 15 03 28 08 18 00 f3 a6 84
+                 a2 8c b8 a9 8e 6d 4a 97 87 16 fd 34 92 18 00 8c
+                 11 01 f3 a6 84 a2 8c b8 a9 8e 6d 4a 97 87 16 fd
+                 34 92 00 19 00 02 15 03 28 1a 1a 00 0d 0f 4b bb
+                 0e 28 41 f2 91 d1 45 19 49 d0 7e 58 1a 00 8e 11
+                 01 0d 0f 4b bb 0e 28 41 f2 91 d1 45 19 49 d0 7e
+                 58 00 1b 00 02 15 03 28 1a 1c 00 84 4f 08 31 38
+                 22 e7 bf a9 45 a4 17 7b d5 7d 40 1c 00 8e 11 01
+                 84 4f 08 31 38 22 e7 bf a9 45 a4 17 7b d5 7d 40
+                 00 1d 00 02 15 03 28 1a 1e 00 13 70 78 2f 5e 7e
+                 ec a2 66 45 9d 10 8a a2 cb cd 1e 00 8e 24 14 13
+                 70 78 2f 5e 7e ec a2 66 45 9d 10 8a a2 cb cd 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 1f 00 02 15 03 28 1a 20 00 59 6c 04 60
+                 f6 22 5a a5 4e 40 a9 8e c8 1d 20 d9 20 00 8e 24
+                 14 59 6c 04 60 f6 22 5a a5 4e 40 a9 8e c8 1d 20
+                 d9 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 21 00 02 12 00 28 db 0d 24 ba 37
+                 cb 41 3f 8e 49 32 4c a9 66 c2 f5 22 00 02 15 03
+                 28 08 23 00 68 f2 6a d0 ba 74 46 97 64 41 97 c5
+                 f7 2a 45 a3 23 00 8c 11 01 68 f2 6a d0 ba 74 46
+                 97 64 41 97 c5 f7 2a 45 a3 00 24 00 02 15 03 28
+                 12 25 00 f1 25 5f 35 a8 9d 46 b6 b4 99 89 08 01
+                 8d cb 73 25 00 82 11 f1 25 5f 35 a8 9d 46 b6 b4
+                 99 89 08 01 8d cb 73 00 26 00 02 15 03 28 12 27
+                 00 5f b0 94 72 be da b3 b5 6f 44 dd 81 a3 1c 8d
+                 93 27 00 82 11 5f b0 94 72 be da b3 b5 6f 44 dd
+                 81 a3 1c 8d 93 00 28 00 02 15 03 28 0a 29 00 68
+                 82 52 c9 65 56 f5 8b a3 4a c1 20 2c 32 03 55 29
+                 00 8e 12 02 68 82 52 c9 65 56 f5 8b a3 4a c1 20
+                 2c 32 03 55 05 00 2a 00 02 15 03 28 0a 2b 00 97
+                 ea d8 30 63 38 43 1b 9d 52 24 6a b1 b3 b6 74 2b
+                 00 8e 12 02 97 ea d8 30 63 38 43 1b 9d 52 24 6a
+                 b1 b3 b6 74 58 02 2c 00 02 12 00 28 c2 16 a3 9d
+                 a2 35 00 84 52 4f e6 c4 e0 32 e8 4b 2d 00 02 15
+                 03 28 1a 2e 00 f7 ba 88 47 9d 78 7b 8d 22 4c da
+                 79 1b e9 63 71 2e 00 8e 11 01 f7 ba 88 47 9d 78
+                 7b 8d 22 4c da 79 1b e9 63 71 00 2f 00 02 15 03
+                 28 1a 30 00 3c 4e 41 cd ba 27 e5 80 4b 4a 5b 9d
+                 01 02 f6 5c 30 00 8e 12 02 3c 4e 41 cd ba 27 e5
+                 80 4b 4a 5b 9d 01 02 f6 5c 00 00 31 00 02 12 00
+                 28 f1 bb 7b 88 8a 50 42 3d 99 24 e1 32 61 b4 e5
+                 39 32 00 02 15 03 28 12 33 00 47 68 d6 46 b5 d8
+                 4c b3 b0 29 70 0d aa 5a 6c 29 33 00 82 12 47 68
+                 d6 46 b5 d8 4c b3 b0 29 70 0d aa 5a 6c 29 00 00
+                 34 00 02 15 03 28 12 35 00 72 ed ff 08 ee 82 ca
+                 94 40 42 0c e6 d8 c2 d4 0b 35 00 82 12 72 ed ff
+                 08 ee 82 ca 94 40 42 0c e6 d8 c2 d4 0b 00 00 36
+                 00 02 15 03 28 0a 37 00 6e dc ce 3a 8d 1c 49 df
+                 aa 96 e2 3c 1a 14 17 f3 37 00 8e 24 14 6e dc ce
+                 3a 8d 1c 49 df aa 96 e2 3c 1a 14 17 f3 00 00 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 38 00 02 15 03 28 0a 39 00 8d c6 9a 83 23 f8
+                 90 99 e8 4e 5f 98 6d 0c d8 0c 39 00 8e 24 14 8d
+                 c6 9a 83 23 f8 90 99 e8 4e 5f 98 6d 0c d8 0c 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 3a 00 02 15 03 28 0a 3b 00 43 ce a6 5a
+                 a1 8f a8 bf ad 4d 48 25 17 ce 43 ce 3b 00 8e 24
+                 14 43 ce a6 5a a1 8f a8 bf ad 4d 48 25 17 ce 43
+                 ce 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 3c 00 02 15 03 28 0a 3d 00 3e 0b
+                 27 87 28 2a 46 c9 91 ed 3d 21 85 4c 7f 33 3d 00
+                 8e 11 01 3e 0b 27 87 28 2a 46 c9 91 ed 3d 21 85
+                 4c 7f 33 00 3e 00 02 15 03 28 0a 3f 00 4d 44 f2
+                 35 bb 95 4d 9e 80 6a ee 88 b6 76 fd c3 3f 00 8e
+                 11 01 4d 44 f2 35 bb 95 4d 9e 80 6a ee 88 b6 76
+                 fd c3 13 40 00 02 15 03 28 0a 41 00 14 7d 32 65
+                 cd 37 4f 89 b1 e9 0d e8 a9 53 08 d5 41 00 8e 11
+                 01 14 7d 32 65 cd 37 4f 89 b1 e9 0d e8 a9 53 08
+                 d5 00 42 00 02 15 03 28 0a 43 00 b4 9a 2f 3d 03
+                 f9 f9 9f 07 49 de 79 dc e9 88 dd 43 00 8e 11 01
+                 b4 9a 2f 3d 03 f9 f9 9f 07 49 de 79 dc e9 88 dd
+                 03 44 00 02 12 00 28 5c 8b 0f 4a 89 42 41 1b b8
+                 53 f8 69 38 51 ad 1e 45 00 02 15 03 28 12 46 00
+                 a9 89 5d 1b f0 a8 4c 52 8a d2 09 5a 1d 58 9d 92
+                 46 00 82 12 a9 89 5d 1b f0 a8 4c 52 8a d2 09 5a
+                 1d 58 9d 92 00 00 47 00 02 15 03 28 12 48 00 e8
+                 71 ec 78 1d b2 36 97 c3 48 30 75 f0 67 94 27 48
+                 00 82 14 e8 71 ec 78 1d b2 36 97 c3 48 30 75 f0
+                 67 94 27 00 00 00 00 49 00 02 15 03 28 12 4a 00
+                 b2 6e d3 f5 a7 cf 4c 8c aa dc de 8e 80 d8 88 eb
+                 4a 00 82 12 b2 6e d3 f5 a7 cf 4c 8c aa dc de 8e
+                 80 d8 88 eb 00 00 4b 00 02 15 03 28 0a 4c 00 67
+                 5f c1 d7 d5 c3 dc 94 1a 40 cf 88 ac 41 c4 a4 4c
+                 00 8e 24 14 67 5f c1 d7 d5 c3 dc 94 1a 40 cf 88
+                 ac 41 c4 a4 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 00 00 00 4d 00 02 15 03 28 0a 4e
+                 00 92 80 94 c5 0a 6a 93 ba e2 47 93 7d a5 83 eb
+                 1e 4e 00 8e 24 14 92 80 94 c5 0a 6a 93 ba e2 47
+                 93 7d a5 83 eb 1e 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 00 00 00 00 00 4f 00 02 15 03 28
+                 0a 50 00 2e cf 12 4f 7e 5c ad a8 56 4b cf 63 cb
+                 e1 55 4f 50 00 8e 24 14 2e cf 12 4f 7e 5c ad a8
+                 56 4b cf 63 cb e1 55 4f 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 51 00 02 15
+                 03 28 0a 52 00 51 65 b6 43 56 ea 42 8c 45 41 0d
+                 22 87 81 03 66 52 00 8e 11 01 51 65 b6 43 56 ea
+                 42 8c 45 41 0d 22 87 81 03 66 00 53 00 02 15 03
+                 28 0a 54 00 50 4d a6 66 27 0d 67 b5 70 40 a8 e1
+                 57 11 b6 64 54 00 8e 11 01 50 4d a6 66 27 0d 67
+                 b5 70 40 a8 e1 57 11 b6 64 00 55 00 02 15 03 28
+                 0a 56 00 e4 e1 15 de 9e 6b ae 8c 0d 4c 2b 91 98
+                 17 50 9a 56 00 8e 11 01 e4 e1 15 de 9e 6b ae 8c
+                 0d 4c 2b 91 98 17 50 9a 01 57 00 02 15 03 28 0a
+                 58 00 13 48 36 bf 88 da 52 bc 80 4a 4a 8f ae 2f
+                 4b e2 58 00 8e 11 01 13 48 36 bf 88 da 52 bc 80
+                 4a 4a 8f ae 2f 4b e2 05 59 00 02 15 03 28 0a 5a
+                 00 e1 3d 35 35 79 98 69 80 86 42 1e af 5f bf 85
+                 ba 5a 00 8e 11 01 e1 3d 35 35 79 98 69 80 86 42
+                 1e af 5f bf 85 ba 01 5b 00 02 12 00 28 be db 43
+                 f5 0f 7a 4d f0 a6 9a 07 45 9b aa 57 19 5c 00 02
+                 15 03 28 12 5d 00 20 d6 a2 be 96 a7 48 6e 91 7e
+                 ed 96 d4 a7 29 33 5d 00 82 12 20 d6 a2 be 96 a7
+                 48 6e 91 7e ed 96 d4 a7 29 33 00 00 5e 00 02 15
+                 03 28 12 5f 00 ba e4 49 ed 40 8e 23 99 a8 44 6b
+                 8e 63 7d 62 df 5f 00 82 12 ba e4 49 ed 40 8e 23
+                 99 a8 44 6b 8e 63 7d 62 df 00 00 60 00 02 15 03
+                 28 0a 61 00 5f 81 85 66 d0 2c 2a a7 57 4d b4 c6
+                 53 f1 4e 8f 61 00 8e 24 14 5f 81 85 66 d0 2c 2a
+                 a7 57 4d b4 c6 53 f1 4e 8f 00 00 00 00 00 00 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 00 62 00 02
+                 15 03 28 12 63 00 c9 a3 94 8b bc 93 9a 98 cc 4d
+                 1c 14 9d 53 6c fc 63 00 82 11 c9 a3 94 8b bc 93
+                 9a 98 cc 4d 1c 14 9d 53 6c fc 00 64 00 02 15 03
+                 28 12 65 00 c9 a3 94 8b bc 93 9a 98 cc 4d 1c 14
+                 9d 53 6c fc 65 00 82 11 c9 a3 94 8b bc 93 9a 98
+                 cc 4d 1c 14 9d 53 6c fc 00 66 00 02 15 03 28 0a
+                 67 00 dd 2d 8f 50 00 86 f1 b6 c9 4e cb a9 f9 b3
+                 d7 2e 67 00 8e 12 02 dd 2d 8f 50 00 86 f1 b6 c9
+                 4e cb a9 f9 b3 d7 2e ac 0d 68 00 02 15 03 28 0a
+                 69 00 6b 7c 45 2a 9f cd b0 9e bd 41 d5 78 d6 0d
+                 69 f3 69 00 8e 12 02 6b 7c 45 2a 9f cd b0 9e bd
+                 41 d5 78 d6 0d 69 f3 03 00 6a 00 02 12 00 28 e0
+                 c9 7e 53 73 37 5b 94 0b 4e a6 8b 98 32 8a a3 6b
+                 00 02 15 03 28 1a 6c 00 92 e9 fb 72 b7 d0 af 94
+                 97 4a 43 e6 8e b1 88 a1 6c 00 8e 11 01 92 e9 fb
+                 72 b7 d0 af 94 97 4a 43 e6 8e b1 88 a1 00 6d 00
+                 02 15 03 28 1a 6e 00 a0 dd a1 c1 03 47 4a 86 f2
+                 4b 9f 4e e3 75 8f 93 6e 00 8e 11 01 a0 dd a1 c1
+                 03 47 4a 86 f2 4b 9f 4e e3 75 8f 93 00 6f 00 02
+                 15 03 28 1a 70 00 8c 03 0d 66 b3 97 3d 94 42 4e
+                 bd 85 f8 29 87 66 70 00 8e 11 01 8c 03 0d 66 b3
+                 97 3d 94 42 4e bd 85 f8 29 87 66 00 71 00 02 15
+                 03 28 1a 72 00 8a 10 3e c4 63 a0 97 8c f1 47 19
+                 da f3 81 d5 7e 72 00 8e 11 01 8a 10 3e c4 63 a0
+                 97 8c f1 47 19 da f3 81 d5 7e 00 64 00 04 00 20
+                 00 00 04 10 0e 00 00 20 00 00 04 10 0e 00 00 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 00 00 00 00 03 00 01 04 00 00 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 c2 01 00 a0 a1 01 03 02 18 0d 0f
+                 ff ff ff ff ff ff ff ff ff ff 11 00 00 00 01 00
+                 02 00 02 00 01 00 00 00 00 00 00 00 00 00 00 00
+                 00 00 00 00 00 00 00 00 00 00
+          } END_COMMENTED_BYTES
+}
+# SPAR: end of .rodata
+
+# Section .data is empty. Skipping.
+# SPAR: .setup from ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf
+ENTRY "Data" = ".setup from ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf"
+{
+    "Address" = 0x0020bb6c
+    "Data" =
+      COMMENTED_BYTES
+          {
+            <hex>
+                 0a 48 0b 49 08 b5 88 42 02 d0 0a 4a 33 f6 f4 ff
+                 00 22 09 49 09 48 34 f6 35 f8 09 4a 09 4b 22 f0
+                 0f 02 1a 60 bd e8 08 40 fc f7 4e bf e8 b9 20 00
+                 e8 b9 20 00 00 00 00 00 81 01 00 00 e8 b9 20 00
+                 89 bb 20 00 50 0f 20 00
+          } END_COMMENTED_BYTES
+}
+# SPAR: end of .setup
+
+# SPAR: call to  mint_v3_spar_crt_setup
+# SPAR: (address from ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.elf)
+ENTRY "Function Call"
+{
+   "Address" = 0x0020bb6d
+}
+
+# SPAR: end of file ../../build/mint_v3-BCM920732TAG_Q32-rom-ram-Wiced-release/A_20732A0-mint_v3-rom-ram-spar.cgs

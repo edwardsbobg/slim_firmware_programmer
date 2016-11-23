@@ -1,0 +1,1 @@
+Chipload.exe -BLUETOOLMODE -PORT %1 -BAUDRATE 115200nfc -MINIDRIVER drivers\uart_64bytes_DISABLE_EEPROM_WP_PIN1.hex -CONFIG build\program.hex -BTP firmware\20732_EEPROM.btp -NODLMINIDRIVER

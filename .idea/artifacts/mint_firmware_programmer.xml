@@ -1,0 +1,26 @@
+<component name="ArtifactManager">
+  <artifact name="mint_firmware_programmer">
+    <output-path>$PROJECT_DIR$/out/artifacts/mint_firmware_programmer</output-path>
+    <root id="root">
+      <element id="archive" name="mint_firmware_programmer.jar">
+        <element id="module-output" name="mint_firmware_programmer" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/lib/jssc.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/lib/hidapi-1.1.jar" path-in-jar="/" />
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+      </element>
+      <element id="directory" name="config">
+        <element id="dir-copy" path="$PROJECT_DIR$/res/config/mint" />
+      </element>
+      <element id="directory" name="drivers">
+        <element id="dir-copy" path="$PROJECT_DIR$/res/drivers" />
+      </element>
+      <element id="dir-copy" path="$PROJECT_DIR$/res/batch" />
+      <element id="directory" name="firmware">
+        <element id="dir-copy" path="$PROJECT_DIR$/res/firmware/mint" />
+        <element id="file-copy" path="$PROJECT_DIR$/res/firmware/20732_EEPROM.btp" />
+      </element>
+    </root>
+  </artifact>
+</component>
